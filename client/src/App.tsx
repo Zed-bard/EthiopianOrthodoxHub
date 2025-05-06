@@ -7,6 +7,7 @@ import Churches from "@/pages/Churches";
 import NotFound from "@/pages/not-found";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { LanguageProvider } from "@/lib/LanguageContext";
 
 function Router() {
   return (
@@ -23,13 +24,15 @@ function Router() {
 
 function App() {
   return (
-    <div className="font-body text-offblack bg-white min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow">
-        <Router />
-      </main>
-      <Footer />
-    </div>
+    <LanguageProvider>
+      <div className="font-body text-offblack bg-white min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow">
+          <Router />
+        </main>
+        <Footer />
+      </div>
+    </LanguageProvider>
   );
 }
 
