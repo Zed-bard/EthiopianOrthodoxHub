@@ -113,8 +113,8 @@ const Calendar = () => {
       </Helmet>
       <div className="py-16 min-h-screen">
         <div className="container mx-auto px-6">
-          <h1 className="text-4xl md:text-5xl font-heading text-burgundy text-center mb-2">Ethiopian Orthodox Calendar</h1>
-          <p className="text-center text-gray-600 mb-8">Holy days and liturgical seasons</p>
+          <h1 className="text-4xl md:text-5xl font-heading text-burgundy text-center mb-2">{t('calendarLabels', 'calendarTitle')}</h1>
+          <p className="text-center text-gray-600 mb-8">{t('calendarLabels', 'holyDaysAndSeasons')}</p>
           
           <DecorativeDivider />
           
@@ -126,7 +126,7 @@ const Calendar = () => {
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-10">
               <div className="text-center">
-                <span className="block text-sm text-gray-600">Ethiopian Date:</span>
+                <span className="block text-sm text-gray-600">{t('calendarLabels', 'ethiopianDate')}</span>
                 <span className="font-semibold text-xl text-burgundy">
                   {getEthiopianMonthName(ethiopianToday.month)} {ethiopianToday.day}, {ethiopianToday.year} E.C.
                 </span>

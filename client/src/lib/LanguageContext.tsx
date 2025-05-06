@@ -67,6 +67,42 @@ export const translations: Translations = {
       'Afaan Oromoo': 'Guyyaa fi Yeroo Itoophiyaa Ammaa',
       'Tigrinya': 'ህሉው ናይ ኢትዮጵያ ዕለትን ሰዓትን'
     },
+    ethiopianDate: {
+      'English': 'Ethiopian Date:',
+      'Amharic': 'የኢትዮጵያ ቀን:',
+      'Afaan Oromoo': 'Guyyaa Itoophiyaa:',
+      'Tigrinya': 'ኢትዮጵያዊ ዕለት:'
+    },
+    ethiopianTime: {
+      'English': 'Ethiopian Time:',
+      'Amharic': 'የኢትዮጵያ ሰዓት:',
+      'Afaan Oromoo': 'Yeroo Itoophiyaa:',
+      'Tigrinya': 'ኢትዮጵያዊ ሰዓት:'
+    },
+    calendarTitle: {
+      'English': 'Ethiopian Orthodox Calendar',
+      'Amharic': 'የኢትዮጵያ ኦርቶዶክስ የቀን መቁጠሪያ',
+      'Afaan Oromoo': 'Kaalendarii Ortodoksii Itoophiyaa',
+      'Tigrinya': 'ናይ ኢትዮጵያ ኦርቶዶክስ ካላንደር'
+    },
+    holyDaysAndSeasons: {
+      'English': 'Holy days and liturgical seasons',
+      'Amharic': 'በዓላት እና የአምልኮ ወቅቶች',
+      'Afaan Oromoo': 'Guyyoota qulqulluu fi yeroo waaqeffannaa',
+      'Tigrinya': 'ቅዱሳት መዓልትታትን ወቕታዊ ዝገርን'
+    },
+    upcomingHolyDays: {
+      'English': 'Upcoming Holy Days',
+      'Amharic': 'መጪ በዓላት',
+      'Afaan Oromoo': 'Guyyoota Qulqulluu Dhufan',
+      'Tigrinya': 'ዝመጽእ ቅዱሳት መዓልታት'
+    },
+    noHolyDays: {
+      'English': 'No major holy days in this month.',
+      'Amharic': 'በዚህ ወር ውስጥ ዋና በዓላት የሉም።',
+      'Afaan Oromoo': 'Baatii kana keessatti guyyoonni qulqulluu gudaan hin jiran.',
+      'Tigrinya': 'ኣብዚ ወርሒ ዓበይቲ ቅዱሳት መዓልትታት የለዉን።'
+    },
     sun: {
       'English': 'Sun',
       'Amharic': 'እሁድ',

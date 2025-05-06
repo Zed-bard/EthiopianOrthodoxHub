@@ -111,8 +111,8 @@ const CalendarSection = () => {
 
   return (
     <section id="calendar" className="py-16 container mx-auto px-6">
-      <h2 className="text-3xl md:text-4xl font-heading text-burgundy text-center mb-2">Ethiopian Orthodox Calendar</h2>
-      <p className="text-center text-gray-600 mb-8">Holy days and liturgical seasons</p>
+      <h2 className="text-3xl md:text-4xl font-heading text-burgundy text-center mb-2">{t('calendarLabels', 'calendarTitle')}</h2>
+      <p className="text-center text-gray-600 mb-8">{t('calendarLabels', 'holyDaysAndSeasons')}</p>
       
       <DecorativeDivider />
       
@@ -124,13 +124,13 @@ const CalendarSection = () => {
         </div>
         <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-10">
           <div className="text-center">
-            <span className="block text-sm text-gray-600">Ethiopian Date:</span>
+            <span className="block text-sm text-gray-600">{t('calendarLabels', 'ethiopianDate')}</span>
             <span className="font-semibold text-burgundy">
               {getEthiopianMonthName(ethiopianToday.month)} {ethiopianToday.day}, {ethiopianToday.year} E.C.
             </span>
           </div>
           <div className="text-center">
-            <span className="block text-sm text-gray-600">Ethiopian Time:</span>
+            <span className="block text-sm text-gray-600">{t('calendarLabels', 'ethiopianTime')}</span>
             <span className="font-semibold text-burgundy">
               {ethiopianTime.hour}:{ethiopianTime.minute < 10 ? '0' + ethiopianTime.minute : ethiopianTime.minute} {ethiopianTime.period}
             </span>
@@ -163,13 +163,13 @@ const CalendarSection = () => {
           
           {/* Days of Week */}
           <div className="grid grid-cols-7 text-center bg-gray-100">
-            <div className="py-2 font-semibold">Sun</div>
-            <div className="py-2 font-semibold">Mon</div>
-            <div className="py-2 font-semibold">Tue</div>
-            <div className="py-2 font-semibold">Wed</div>
-            <div className="py-2 font-semibold">Thu</div>
-            <div className="py-2 font-semibold">Fri</div>
-            <div className="py-2 font-semibold">Sat</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'sun')}</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'mon')}</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'tue')}</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'wed')}</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'thu')}</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'fri')}</div>
+            <div className="py-2 font-semibold">{t('calendarLabels', 'sat')}</div>
           </div>
           
           {/* Calendar Grid */}
@@ -199,7 +199,7 @@ const CalendarSection = () => {
         
         {/* Upcoming Holidays */}
         <div className="mt-12">
-          <h3 className="text-2xl font-heading text-burgundy mb-6">Upcoming Holy Days</h3>
+          <h3 className="text-2xl font-heading text-burgundy mb-6">{t('calendarLabels', 'upcomingHolyDays')}</h3>
           
           <div className="space-y-4">
             {upcomingHolyDays.map((holyDay) => (
