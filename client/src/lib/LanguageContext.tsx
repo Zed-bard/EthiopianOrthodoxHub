@@ -103,6 +103,24 @@ export const translations: Translations = {
       'Afaan Oromoo': 'Baatii kana keessatti guyyoonni qulqulluu gudaan hin jiran.',
       'Tigrinya': 'ኣብዚ ወርሒ ዓበይቲ ቅዱሳት መዓልትታት የለዉን።'
     },
+    monthsLabel: {
+      'English': 'Months',
+      'Amharic': 'ወራት',
+      'Afaan Oromoo': 'Baatiiwwan',
+      'Tigrinya': 'ኣዋርሕ'
+    },
+    aboutCalendar: {
+      'English': 'About the Calendar',
+      'Amharic': 'ስለ የቀን መቁጠሪያው',
+      'Afaan Oromoo': 'Waaee Kaalendarii',
+      'Tigrinya': 'ብዛዕባ ካላንደር'
+    },
+    holyDaysIn: {
+      'English': 'Holy Days in',
+      'Amharic': 'በዓላት በ',
+      'Afaan Oromoo': 'Guyyoota Qulqulluu',
+      'Tigrinya': 'ቅዱሳት መዓልታት ኣብ'
+    },
     sun: {
       'English': 'Sun',
       'Amharic': 'እሁድ',

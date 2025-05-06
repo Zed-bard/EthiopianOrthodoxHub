@@ -132,7 +132,7 @@ const Calendar = () => {
                 </span>
               </div>
               <div className="text-center">
-                <span className="block text-sm text-gray-600">Ethiopian Time:</span>
+                <span className="block text-sm text-gray-600">{t('calendarLabels', 'ethiopianTime')}</span>
                 <span className="font-semibold text-xl text-burgundy">
                   {ethiopianTime.hour}:{ethiopianTime.minute < 10 ? '0' + ethiopianTime.minute : ethiopianTime.minute} {ethiopianTime.period}
                 </span>
@@ -146,7 +146,7 @@ const Calendar = () => {
               <div className="md:col-span-1">
                 <Card>
                   <CardContent className="p-4">
-                    <h3 className="font-heading text-lg text-burgundy mb-3">Months</h3>
+                    <h3 className="font-heading text-lg text-burgundy mb-3">{t('calendarLabels', 'monthsLabel')}</h3>
                     <PatternBorder className="mb-4" />
                     <ul className="space-y-1">
                       {months.map((month) => (
@@ -165,7 +165,7 @@ const Calendar = () => {
                 
                 <Card className="mt-6">
                   <CardContent className="p-4">
-                    <h3 className="font-heading text-lg text-burgundy mb-3">About the Calendar</h3>
+                    <h3 className="font-heading text-lg text-burgundy mb-3">{t('calendarLabels', 'aboutCalendar')}</h3>
                     <PatternBorder className="mb-4" />
                     <p className="text-sm text-gray-700">
                       The Ethiopian Orthodox calendar is based on the ancient Coptic calendar and differs from the Gregorian calendar. It has 13 months, with 12 months of 30 days each and a shorter month at the end of the year with 5 or 6 days.
@@ -239,7 +239,7 @@ const Calendar = () => {
                 
                 {/* Holy Days for this month */}
                 <div className="mt-8">
-                  <h3 className="text-2xl font-heading text-burgundy mb-4">Holy Days in {monthName}</h3>
+                  <h3 className="text-2xl font-heading text-burgundy mb-4">{t('calendarLabels', 'holyDaysIn')} {monthName}</h3>
                   
                   {holyDays.length > 0 ? (
                     <div className="space-y-4">
@@ -256,7 +256,7 @@ const Calendar = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-600 italic">No major holy days in this month.</p>
+                    <p className="text-gray-600 italic">{t('calendarLabels', 'noHolyDays')}</p>
                   )}
                 </div>
               </div>
