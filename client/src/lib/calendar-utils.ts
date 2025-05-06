@@ -251,11 +251,11 @@ export const getCurrentEthiopianDate = (): EthiopianDate => {
     // Find the Ethiopian month that corresponds to the current Gregorian date
     for (let i = 0; i < ethiopianMonths.length; i++) {
       if (ethiopianMonths[i].gregorianStart?.month === gregorianMonth) {
-        if (ethiopianMonths[i].gregorianStart.day <= gregorianDay) {
+        if (ethiopianMonths[i].gregorianStart?.day <= gregorianDay) {
           ethiopianMonth = ethiopianMonths[i].number;
           
           // Calculate the day
-          ethiopianDay = gregorianDay - ethiopianMonths[i].gregorianStart.day + 1;
+          ethiopianDay = gregorianDay - (ethiopianMonths[i].gregorianStart?.day || 0) + 1;
           break;
         }
       }
@@ -271,7 +271,7 @@ export const getCurrentEthiopianDate = (): EthiopianDate => {
           
           // We're in a different Gregorian month
           const daysInPrevGregorianMonth = new Date(gregorianYear, gregorianMonth - 1, 0).getDate();
-          ethiopianDay = daysInPrevGregorianMonth - ethiopianMonths[i].gregorianStart.day + gregorianDay + 1;
+          ethiopianDay = daysInPrevGregorianMonth - (ethiopianMonths[i].gregorianStart?.day || 0) + gregorianDay + 1;
           
           // Check if we need to move to the next Ethiopian month
           if (ethiopianDay > ethiopianMonths[i].days) {
