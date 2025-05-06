@@ -1,14 +1,17 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   getEthiopianMonthName, 
   getEthiopianMonthDays, 
   getEthiopianHolyDays,
+  getCurrentEthiopianDate,
+  getEthiopianHour,
   EthiopianDate,
   HolyDay
 } from "@/lib/calendar-utils";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const DecorativeDivider = () => (
   <div className="flex items-center justify-center mb-12">
@@ -59,8 +62,21 @@ const HolyDayItem = ({ day, name, description }: { day: number; name: string; de
 );
 
 const CalendarSection = () => {
-  // Using current Ethiopian year and month (2016 EC, 1 for Meskerem)
-  const [currentDate, setCurrentDate] = useState<EthiopianDate>({ year: 2016, month: 1 });
+  const { t } = useLanguage();
+  
+  // Get the current Ethiopian date
+  const ethiopianToday = getCurrentEthiopianDate();
+  const [currentDate, setCurrentDate] = useState<EthiopianDate>(ethiopianToday);
+  const [ethiopianTime, setEthiopianTime] = useState(getEthiopianHour());
+  
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setEthiopianTime(getEthiopianHour());
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(timer);
+  }, []);
   
   const monthName = getEthiopianMonthName(currentDate.month);
   const daysInMonth = getEthiopianMonthDays(currentDate.month);
@@ -69,9 +85,9 @@ const CalendarSection = () => {
   // Get upcoming holy days (for display in the bottom section)
   const upcomingHolyDays = holyDays.slice(0, 3);
 
-  // Gregorian date reference
+  // Gregorian date reference for 2025
   const gregMonth = currentDate.month <= 4 ? 8 + currentDate.month : currentDate.month - 4;
-  const gregYear = currentDate.month <= 4 ? 2023 : 2024;
+  const gregYear = 2025;
   
   const previousMonth = () => {
     setCurrentDate(prev => {
@@ -99,6 +115,28 @@ const CalendarSection = () => {
       <p className="text-center text-gray-600 mb-8">Holy days and liturgical seasons</p>
       
       <DecorativeDivider />
+      
+      {/* Current Ethiopian Date and Time Display */}
+      <div className="max-w-lg mx-auto mb-10 bg-burgundy bg-opacity-10 rounded-lg p-4 text-center">
+        <div className="flex items-center justify-center mb-2">
+          <Clock className="text-burgundy mr-2" />
+          <h3 className="font-heading text-xl text-burgundy">{t('calendarLabels', 'currentTime')}</h3>
+        </div>
+        <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-10">
+          <div className="text-center">
+            <span className="block text-sm text-gray-600">Ethiopian Date:</span>
+            <span className="font-semibold text-burgundy">
+              {getEthiopianMonthName(ethiopianToday.month)} {ethiopianToday.day}, {ethiopianToday.year} E.C.
+            </span>
+          </div>
+          <div className="text-center">
+            <span className="block text-sm text-gray-600">Ethiopian Time:</span>
+            <span className="font-semibold text-burgundy">
+              {ethiopianTime.hour}:{ethiopianTime.minute < 10 ? '0' + ethiopianTime.minute : ethiopianTime.minute} {ethiopianTime.period}
+            </span>
+          </div>
+        </div>
+      </div>
       
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">

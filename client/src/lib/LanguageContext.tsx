@@ -66,6 +66,48 @@ export const translations: Translations = {
       'Amharic': 'የኢትዮጵያ ቀን እና ሰዓት',
       'Afaan Oromoo': 'Guyyaa fi Yeroo Itoophiyaa Ammaa',
       'Tigrinya': 'ህሉው ናይ ኢትዮጵያ ዕለትን ሰዓትን'
+    },
+    sun: {
+      'English': 'Sun',
+      'Amharic': 'እሁድ',
+      'Afaan Oromoo': 'Dilbata',
+      'Tigrinya': 'ሰንበት'
+    },
+    mon: {
+      'English': 'Mon',
+      'Amharic': 'ሰኞ',
+      'Afaan Oromoo': 'Wiixata',
+      'Tigrinya': 'ሰኑይ'
+    },
+    tue: {
+      'English': 'Tue',
+      'Amharic': 'ማክሰኞ',
+      'Afaan Oromoo': 'Kibxata',
+      'Tigrinya': 'ሰሉስ'
+    },
+    wed: {
+      'English': 'Wed',
+      'Amharic': 'ረቡዕ',
+      'Afaan Oromoo': 'Roobii',
+      'Tigrinya': 'ረቡዕ'
+    },
+    thu: {
+      'English': 'Thu',
+      'Amharic': 'ሐሙስ',
+      'Afaan Oromoo': 'Kamiisa',
+      'Tigrinya': 'ሓሙስ'
+    },
+    fri: {
+      'English': 'Fri',
+      'Amharic': 'አርብ',
+      'Afaan Oromoo': 'Jimaata',
+      'Tigrinya': 'ዓርቢ'
+    },
+    sat: {
+      'English': 'Sat',
+      'Amharic': 'ቅዳሜ',
+      'Afaan Oromoo': 'Sanbata',
+      'Tigrinya': 'ቀዳም'
     }
   },
   common: {

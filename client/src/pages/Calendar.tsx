@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { PatternBorder } from "@/components/ui/pattern-border";
 import { 
@@ -7,10 +7,13 @@ import {
   getEthiopianMonthDays, 
   getEthiopianHolyDays,
   getEthiopianMonths,
+  getCurrentEthiopianDate,
+  getEthiopianHour,
   EthiopianDate,
   HolyDay
 } from "@/lib/calendar-utils";
 import { Helmet } from 'react-helmet';
+import { useLanguage } from "@/lib/LanguageContext";
 
 const DecorativeDivider = () => (
   <div className="flex items-center justify-center mb-12">
@@ -49,17 +52,34 @@ const CalendarDay = ({
 };
 
 const Calendar = () => {
-  // Using current Ethiopian year (2016 EC)
-  const [currentDate, setCurrentDate] = useState<EthiopianDate>({ year: 2016, month: 1 });
+  const { t, language } = useLanguage();
+  
+  // Get the current Ethiopian date
+  const ethiopianToday = getCurrentEthiopianDate();
+  const [currentDate, setCurrentDate] = useState<EthiopianDate>(ethiopianToday);
+  
+  // Current Ethiopian time
+  const [ethiopianTime, setEthiopianTime] = useState(getEthiopianHour());
+  const [currentTime, setCurrentTime] = useState(new Date());
+  
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setEthiopianTime(getEthiopianHour());
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+    
+    return () => clearInterval(timer);
+  }, []);
   
   const monthName = getEthiopianMonthName(currentDate.month);
   const daysInMonth = getEthiopianMonthDays(currentDate.month);
   const holyDays = getEthiopianHolyDays(currentDate.month);
   const months = getEthiopianMonths();
   
-  // Gregorian date reference
+  // Gregorian date reference - using real date calculation for May 2025
   const gregMonth = currentDate.month <= 4 ? 8 + currentDate.month : currentDate.month - 4;
-  const gregYear = currentDate.month <= 4 ? 2023 : 2024;
+  const gregYear = 2025; // Using 2025 as the reference year
   
   const previousMonth = () => {
     setCurrentDate(prev => {
@@ -97,6 +117,28 @@ const Calendar = () => {
           <p className="text-center text-gray-600 mb-8">Holy days and liturgical seasons</p>
           
           <DecorativeDivider />
+          
+          {/* Current Ethiopian Date and Time Display */}
+          <div className="max-w-lg mx-auto mb-10 bg-burgundy bg-opacity-10 rounded-lg p-6 text-center">
+            <div className="flex items-center justify-center mb-2">
+              <Clock className="text-burgundy mr-2" />
+              <h3 className="font-heading text-xl text-burgundy">{t('calendarLabels', 'currentTime')}</h3>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-2 sm:space-y-0 sm:space-x-10">
+              <div className="text-center">
+                <span className="block text-sm text-gray-600">Ethiopian Date:</span>
+                <span className="font-semibold text-xl text-burgundy">
+                  {getEthiopianMonthName(ethiopianToday.month)} {ethiopianToday.day}, {ethiopianToday.year} E.C.
+                </span>
+              </div>
+              <div className="text-center">
+                <span className="block text-sm text-gray-600">Ethiopian Time:</span>
+                <span className="font-semibold text-xl text-burgundy">
+                  {ethiopianTime.hour}:{ethiopianTime.minute < 10 ? '0' + ethiopianTime.minute : ethiopianTime.minute} {ethiopianTime.period}
+                </span>
+              </div>
+            </div>
+          </div>
           
           <div className="max-w-5xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
@@ -161,13 +203,13 @@ const Calendar = () => {
                   
                   {/* Days of Week */}
                   <div className="grid grid-cols-7 text-center bg-gray-100">
-                    <div className="py-2 font-semibold">Sun</div>
-                    <div className="py-2 font-semibold">Mon</div>
-                    <div className="py-2 font-semibold">Tue</div>
-                    <div className="py-2 font-semibold">Wed</div>
-                    <div className="py-2 font-semibold">Thu</div>
-                    <div className="py-2 font-semibold">Fri</div>
-                    <div className="py-2 font-semibold">Sat</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'sun')}</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'mon')}</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'tue')}</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'wed')}</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'thu')}</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'fri')}</div>
+                    <div className="py-2 font-semibold">{t('calendarLabels', 'sat')}</div>
                   </div>
                   
                   {/* Calendar Grid */}
