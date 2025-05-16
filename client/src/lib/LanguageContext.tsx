@@ -394,13 +394,16 @@ export const translations: Translations = {
           'Afaan Oromoo': 'Ogbarruu fi beekumsa amantaa Ortodoksii Itoophiyaa irraa argadhu.',
           'Tigrinya': 'ካብ ኢትዮጵያ ኦርቶዶክስ ባህሊ ዝመጸ ኣረጋዊ መንፈሳዊ ጥበብን ኣምላካዊ ፍልጠትን ርኸብ።'
         }
-      },
-      religiousCalendar: {
+      },      religiousCalendar: {
         title: {
           'English': 'Religious Calendar',
           'Amharic': 'የሃይማኖት የቀን መቁጠሪያ',
-          'Afaan Oromoo': 'Kaaleendarii Amantaa',
-          'Tigrinya': 'ናይ ሃይማኖት ካላንደር'
+          'Afaan Oromoo': 'Kadhannaa',
+          'Tigrinya': 'ናይ ሃይማኖት ካላንደር',
+          'en': 'Religious Calendar',
+          'am': 'የሃይማኖት የቀን መቁጠሪያ',
+          'om': 'Kadhannaa',
+          'ti': 'ናይ ሃይማኖት ካላንደር'
         },
         description: {
           'English': 'Follow the Ethiopian Orthodox calendar with holy days, festivals, and fasting periods.',

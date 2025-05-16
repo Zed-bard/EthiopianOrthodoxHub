@@ -32,7 +32,7 @@ export interface Tradition {
 export type PrayerCategory = {
   en: "Morning Prayer" | "Evening Prayer" | "Liturgical Hymn" | "Fasting Prayer" | "Daily Prayer";
   am: "የማልዳ ጸሎት" | "የማታ ጸሎት" | "የሥርዓት መዝሙር" | "የጾም ጸሎት" | "የዕለት ጸሎት";
-  om: "Kadhannaa Ganamaa" | "Kadhannaa Galgalaa" | "Faarfannaa Sirnaa" | "Kadhannaa Soomaa" | "Kadhannaa Guyyaa";
+  om: "Kadhannaa Ganamaa" | "Kadhannaa Galgalaa" | "Faarfannaa Tawaahidoo" | "Kadhannaa fi Sagada" | "Kadhannaa Guyyaa";
   ti: "ጸሎት ንግሆ" | "ጸሎት ማታ" | "መዝሙር ስርዓት" | "ጸሎት ጾም" | "ዕለታዊ ጸሎት";
 };
 
@@ -66,7 +66,7 @@ export function getLocalizedContent<T extends Record<string, string>>(
 export const prayerCategories: Record<keyof PrayerCategory, PrayerCategory[keyof PrayerCategory][]> = {
   en: ["Morning Prayer", "Evening Prayer", "Liturgical Hymn", "Fasting Prayer", "Daily Prayer"],
   am: ["የማልዳ ጸሎት", "የማታ ጸሎት", "የሥርዓት መዝሙር", "የጾም ጸሎት", "የዕለት ጸሎት"],
-  om: ["Kadhannaa Ganamaa", "Kadhannaa Galgalaa", "Faarfannaa Sirnaa", "Kadhannaa Soomaa", "Kadhannaa Guyyaa"],
+  om: ["Kadhannaa Ganamaa", "Kadhannaa Galgalaa", "Faarfannaa Tawaahidoo", "Kadhannaa fi Sagada", "Kadhannaa Guyyaa"],
   ti: ["ጸሎት ንግሆ", "ጸሎት ማታ", "መዝሙር ስርዓት", "ጸሎት ጾም", "ዕለታዊ ጸሎት"]
 };
 
@@ -578,7 +578,7 @@ export const prayers: Prayer[] = [
       ti: "ጸሎት ሰዓት 12 ቀትሪ፡ ምስቃል ክርስቶስ ኣብ መስቀል ዘዘኻኽር።"
     },
     content: {
-      time: "12:00 PM",
+      time: "6:00 ",
       significance: {
         en: [
           "Hour of Christ's crucifixion",
@@ -591,9 +591,9 @@ export const prayers: Prayer[] = [
           "እባብ አዳምንና ሔዋንን ያታለለበት"
         ],
         om: [
-          "Sa'atii fannifamuu Kiristoos",
+          "Sa'atii fannifamuu Gooftaa keenyaa Iyyesuus Kiristoos",
           "Yeroo dukkanni lafaa uwwise",
-          "Yeroo bosonni Addaam fi Hewaan qore"
+          "Yeroo Seexannii Addaam fi Hewaan qore"
         ],
         ti: [
           "ሰዓት ምስቃል ክርስቶስ",
@@ -622,9 +622,9 @@ export const prayers: Prayer[] = [
     slug: "ninth-hour-prayer",
     description: {
       en: "Afternoon prayer at 3 PM, commemorating Christ's death on the Cross and the miracles that occurred.",
-      am: "በከሰዓት 3 ሰዓት፣ ክርስቶስ በመስቀል ላይ የሞተበትንና የተከሰቱትን ተአምራት የሚያስታውስ ጸሎት።",
-      om: "Kadhannaa sa'a 3 waaree booda, du'a Kiristoos fannoo irratti fi dinqiiwwan raawwataman yaadachiisu.",
-      ti: "ጸሎት ሰዓት 3 ድሕሪ ቀትሪ፡ ሞት ክርስቶስ ኣብ መስቀልን ተኣምራት ዝተፈጸሙን ዘዘኻኽር።"
+      am: "በከሰዓት 9 ሰዓት፣ ክርስቶስ በመስቀል ላይ የሞተበትንና የተከሰቱትን ተአምራት የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 9 waaree booda, du'a Kiristoos fannoo irratti fi dinqiiwwan raawwataman yaadachiisu.",
+      ti: "ጸሎት ሰዓት 9 ድሕሪ ቀትሪ፡ ሞት ክርስቶስ ኣብ መስቀልን ተኣምራት ዝተፈጸሙን ዘዘኻኽር።"
     },
     content: {
       time: "3:00 PM",
@@ -640,8 +640,8 @@ export const prayers: Prayer[] = [
           "ሞቱንና የሕይወት ስጦታውን የምናስታውስበት"
         ],
         om: [
-          "Sa'atii Kiristoos hafuura isaa kenneef",
-          "Yeroo du'a isaa dinqiiwwan raawwataman",
+          "Sa'atii Gooftaan Keenya iyyesuus Kiristoos afuura isaa kenneef",
+          "Yeroo du'a isaan dinqiiwwan raawwataman",
           "Yeroo du'a isaa fi kennaa jireenya yaadannu"
         ],
         ti: [
@@ -664,16 +664,16 @@ export const prayers: Prayer[] = [
     title: {
       en: "Evening Prayer (Tselote Serk)",
       am: "ጸሎተ ሠርክ",
-      om: "Kadhannaa Serk",
+      om: "Kadhannaa Sa'aatii 11:00",
       ti: "ጸሎት ሰርክ"
     },
     originalTitle: "ጸሎተ ሠርክ",
     slug: "evening-prayer",
     description: {
       en: "Evening prayer at 5 PM, commemorating Christ's removal from the Cross and His descent into Sheol.",
-      am: "በምሽት 5 ሰዓት፣ ክርስቶስ ከመስቀል መውረዱንና ወደ ሲኦል መውረዱን የሚያስታውስ ጸሎት።",
-      om: "Kadhannaa sa'a 5 galgalaa, buufamuu Kiristoos fannoo irraa fi gadi bu'uu isaa gara Si'ool yaadachiisu.",
-      ti: "ጸሎት ሰዓት 5 ምሸት፡ ምውራድ ክርስቶስ ካብ መስቀልን ምውራዱ ናብ ሲኦልን ዘዘኻኽር።"
+      am: "በ 11:00 ፣ ክርስቶስ ከመስቀል መውረዱንና ወደ ሲኦል መውረዱን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 11:00 galgalaa, Ulfinni Fi Galanni Waamamuu Maqaa Isaatiif haa ta'u yeroo kannatti Gooftaan Keenya fannoo irraa yooseefi Niqoodimoosin Buufame .",
+      ti: "ጸሎት ሰዓት 11:00 ማታ፡ ምውራድ ክርስቶስ ካብ መስቀልን ምውራዱ ናብ ሲኦልን ዘዘኻኽር።"
     },
     content: {
       time: "5:00 PM",

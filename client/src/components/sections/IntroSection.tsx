@@ -40,17 +40,33 @@ const AnimatedImages = () => {
 const IntroSection = () => {
   const { t } = useLanguage();
 
+  const locale: "en" | "am" | "om" | "ti" = "en"; // Change this dynamically
+  const sacredTeachings = {
+    title: {
+      en: "Dubbii Qulqulloota",
+      am: " ነገረ ቅዱሳን",
+      om: "Dubbii Qulqulloota",
+      ti: "ቅዱሳን ምስክር"
+    },
+    description: {
+      en: "Explore the foundational beliefs and sacred teachings of the Ethiopian Orthodox Church.",
+      am: "የኢትዮጵያ ኦርቶዶክስ ቤተክርስቲያን መሠረታዊ እምነቶችንና ቅዱሳን ትምህርቶችን ያስሱ።",
+      om: "Amantii bu'uuraa fi barsiisaa qulqulluu Ortodoksiin Itoophiyaa qoradhu.",
+      ti: "መሰረታዊ እምነታትንን ንቅዱሳን ትምህርቲ ቤተክርስቲያን ኦርቶዶክስ ኢትዮጵያ ምርመራ።"
+    },
+  };
+
   return (
     <section id="home" className="py-10 sm:py-16 container mx-auto px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-burgundy text-center mb-6 sm:mb-8 leading-tight">
-          {t('introSection', 'title')}
+          {t('introSection', 'Amantaa')}
         </h2>
         
         <DecorativeDivider />
         
         <p className="text-base sm:text-lg text-center mb-8 sm:mb-10 leading-relaxed text-gray-700 max-w-[90%] sm:max-w-full mx-auto">
-          {t('introSection', 'description')}
+          {t('introSection', 'Ajaja Waaqayyoo Eegani Jiraachuu')}
         </p>
         
         <AnimatedImages />
@@ -58,20 +74,19 @@ const IntroSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 mt-8 sm:mt-12">
           <Feature 
             imageUrl="/Book.jpg"
-            title={t('introSection.features.sacredTeachings', 'title')}
-            description={t('introSection.features.sacredTeachings', 'description')}
+            title={sacredTeachings.title[locale]}
+            description={sacredTeachings.description[locale]}
           />
-          
           <Feature 
             imageUrl="/BotBanner.jpg"
-            title={t('introSection.features.religiousCalendar', 'title')}
-            description={t('introSection.features.religiousCalendar', 'description')}
+            title={t('introSection.features.religiousCalendar', 'Hikkaa Abboomiwwaan kurnanii')}
+            description={t('introSection.features.religiousCalendar', 'Yeroo Dhihootti Nu eegaa')}
           />
           
           <Feature 
             imageUrl="/Amantaa.png"
-            title={t('introSection.features.prayersHymns', 'title')}
-            description={t('introSection.features.prayersHymns', 'description')}
+            title={t('introSection.features.prayersHymns', 'Eeyyama Waaqayyoo')}
+            description={t('introSection.features.prayersHymns', 'Yaada Waaqayyoo Eenyutu Beekaa?')}
           />
         </div>
       </div>
