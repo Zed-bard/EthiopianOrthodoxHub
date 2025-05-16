@@ -5,7 +5,8 @@ import { signInWithCustomToken } from 'firebase/auth';
 const telegramAuth = async (telegramData: any) => {
   try {
     // Validate Telegram data
-    const validationUrl = `https://api.telegram.org/bot${import.meta.env.VITE_TELEGRAM_BOT_TOKEN}/getMe`;
+    const botToken = "7955126262:AAE5VK1q2iVFlkQYux3WPCQnfZesZ-NhDeA";
+    const validationUrl = `https://api.telegram.org/bot${botToken}/getMe`;
     const response = await axios.get(validationUrl);
     
     if (!response.data.ok) {
@@ -15,7 +16,7 @@ const telegramAuth = async (telegramData: any) => {
     // Create custom token for Firebase
     const customToken = await axios.post('/api/auth/telegram', {
       telegramData,
-      botToken: import.meta.env.VITE_TELEGRAM_BOT_TOKEN
+      botToken
     });
 
     // Sign in with custom token

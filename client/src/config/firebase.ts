@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCustomToken } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyBApEZ7-sj5IcG8SuSOSrdNvro_gQy8L6s",
+  authDomain: "xofoo-gabre-kiristos.firebaseapp.com",
+  projectId: "xofoo-gabre-kiristos",
+  storageBucket: "xofoo-gabre-kiristos.firebasestorage.app",
+  messagingSenderId: "13372301528",
+  appId: "1:13372301528:web:55e3980165b1517b12b7ad"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -28,6 +28,16 @@ export const signInWithTelegram = async () => {
     return result.user;
   } catch (error) {
     console.error('Error signing in with Telegram:', error);
+    throw error;
+  }
+};
+
+export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
+  } catch (error) {
+    console.error('Error signing in with Google:', error);
     throw error;
   }
 };

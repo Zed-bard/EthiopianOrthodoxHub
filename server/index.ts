@@ -1,8 +1,25 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cors from 'cors';
+import helmet from 'helmet';
 
 const app = express();
+
+// Security headers
+app.use(helmet());
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://ethiopianorthodoxhub.com' 
+    : 'http://localhost:5000',
+  credentials: true
+}));
+
+// Only bind to localhost in development
+const SERVER_HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -62,7 +79,7 @@ app.use((req, res, next) => {
   const port = 5000;
   server.listen({
     port,
-    host: "0.0.0.0",
+    host: SERVER_HOST,
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);

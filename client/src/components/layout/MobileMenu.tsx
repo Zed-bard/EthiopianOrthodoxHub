@@ -205,31 +205,42 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               transition={{ delay: 0.2 }}
               className="border-t border-gray-100/50 p-5 bg-gradient-to-t from-burgundy/5 to-transparent backdrop-blur-sm"
             >
-              {user ? (
-                <div className="flex items-center space-x-4">
-                  <div className="relative">
-                    <img
-                      src={user.photoURL || "/default-avatar.png"}
-                      alt="Profile"
-                      className="w-12 h-12 rounded-xl object-cover ring-2 ring-white shadow-md"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full ring-2 ring-white shadow-sm"></div>
+              {user ? (                <div className="flex flex-col gap-3">
+                  <div className="flex items-center space-x-4">
+                    <div className="relative">
+                      <img
+                        src={user.photoURL || "/default-avatar.png"}
+                        alt="Profile"
+                        className="w-12 h-12 rounded-xl object-cover ring-2 ring-white shadow-md"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full ring-2 ring-white shadow-sm"></div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-900 truncate">
+                        {user.displayName || "User"}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-0.5 truncate">
+                        {user.email}
+                      </p>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="p-2 hover:bg-burgundy/5 rounded-xl transition-colors flex items-center text-burgundy"
+                    >
+                      <RiSettings4Line className="w-5 h-5" />
+                    </motion.button>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">
-                      {user.displayName || "User"}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5 truncate">
-                      {user.email}
-                    </p>
-                  </div>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="p-2 hover:bg-burgundy/5 rounded-xl transition-colors flex items-center text-burgundy"
-                  >
-                    <RiSettings4Line className="w-5 h-5" />
-                  </motion.button>
+                  
+                  <Link href="/" onClick={onClose}>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full px-4 py-3 flex items-center justify-center bg-white border border-burgundy/20 text-burgundy rounded-xl font-medium shadow-sm hover:bg-burgundy/5 transition-all"
+                    >
+                      {t('profile', 'backToHome')}
+                    </motion.button>
+                  </Link>
                 </div>
               ) : (                <Link href="/profile">
                   <motion.button 

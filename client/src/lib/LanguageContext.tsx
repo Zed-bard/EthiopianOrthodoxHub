@@ -338,12 +338,17 @@ export const translations: Translations = {
       'am': 'ይውጡ',
       'om': 'Ba\'i',
       'ti': 'ውጻእ'
-    },
-    accountInfo: {
+    },    accountInfo: {
       'en': 'Account Information',
       'am': 'የመለያ መረጃ',
       'om': 'Odeeffannoo Herrega',
       'ti': 'ናይ ኣካውንት ሓበሬታ'
+    },
+    backToHome: {
+      'en': 'Back to Home',
+      'am': 'ወደ መነሻ ተመለስ',
+      'om': 'Gara Manatti Deebi\'i',
+      'ti': 'ናብ ገዛ ተመለስ'
     },
     signInProvider: {
       'en': 'Sign-in provider',
@@ -354,7 +359,7 @@ export const translations: Translations = {
     accessAccount: {
       'en': 'Access your Ethiopian Orthodox Hub account',
       'am': 'የኢትዮጵያ ኦርቶዶክስ ማዕከል መለያዎን ይጠቀሙ',
-      'om': 'Herrega Ortodoksii Itoophiyaa keessan seenaa',
+      'om': 'Xofoo Q/M/ Gabre Kiristoos keessan seenaa',
       'ti': 'ናብ ናይ ኢትዮጵያ ኦርቶዶክስ ማእከል ኣካውንትኩም እተው'
     }
   },

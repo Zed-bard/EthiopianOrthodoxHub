@@ -20,8 +20,10 @@ import {
   Telegram as TelegramIcon,
   Email as EmailIcon,
   Lock as LockIcon,
+  Home as HomeIcon,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
+import { Link } from 'wouter';
 
 const ProfilePaper = styled(Paper)({
   padding: '1.5rem',
@@ -99,6 +101,16 @@ const Profile: React.FC = () => {
           </Box>
           
           <Box sx={{ mt: 3, display: 'flex', flexDirection: {xs: 'column', sm: 'row'}, justifyContent: 'center', gap: 1 }}>
+            <Link href="/">
+              <AuthButton
+                variant="contained"
+                color="primary"
+                startIcon={<HomeIcon />}
+                sx={{ bgcolor: '#4285F4' }}
+              >
+                {t('profile', 'backToHome')}
+              </AuthButton>
+            </Link>
             <AuthButton
               variant="contained"
               color="error"
@@ -148,6 +160,16 @@ const Profile: React.FC = () => {
             >
               Sign in with Telegram
             </AuthButton>
+            <Link href="/">
+              <AuthButton
+                variant="outlined"
+                color="primary"
+                startIcon={<HomeIcon />}
+                sx={{ borderColor: '#722F37', color: '#722F37' }}
+              >
+                {t('profile', 'backToHome')}
+              </AuthButton>
+            </Link>
           </Box>
         </ProfilePaper>
       )}
