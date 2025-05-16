@@ -1,28 +1,48 @@
+export type LanguageString = {
+  en: string;
+  am: string;
+  om: string;
+  ti: string;
+};
+
 export interface Teaching {
   id: number;
-  title: string;
+  title: LanguageString;
   slug: string;
-  shortDescription: string;
-  content: string;
+  shortDescription: LanguageString;
+  content: LanguageString;
   imageUrl: string;
 }
 
 export interface Prayer {
   id: number;
-  title: string;
+  title: LanguageString;
   originalTitle: string;
   slug: string;
-  description: string;
-  content: string;
-  category: "Morning Prayer" | "Evening Prayer" | "Liturgical Hymn" | "Fasting Prayer";
+  description: LanguageString;
+  content: {
+    time: string;
+    significance: {
+      en: string[];
+      am: string[];
+      om: string[];
+      ti: string[];
+    };
+  };
+  category: {
+    en: string;
+    am: string;
+    om: string;
+    ti: string;
+  };
   imageUrl: string;
 }
 
 export interface Church {
   id: number;
-  name: string;
+  name: LanguageString;
   slug: string;
-  description: string;
+  description: LanguageString;
   longDescription: string;
   location: string;
   imageUrl: string;
@@ -31,8 +51,8 @@ export interface Church {
 
 export interface Tradition {
   id: number;
-  name: string;
-  description: string;
+  name: LanguageString;
+  description: LanguageString;
   history: string;
   significance: string;
   icon: string;

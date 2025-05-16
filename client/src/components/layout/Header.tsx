@@ -1,81 +1,106 @@
-import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import MobileMenu from "./MobileMenu";
 import { PatternBorder } from "@/components/ui/pattern-border";
 import LanguageSelector from "@/components/LanguageSelector";
+import NotificationIcon from "@/components/NotificationIcon";
 import { useLanguage } from "@/lib/LanguageContext";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import Profile from "@/components/Auth/Profile";
+import { FaUserCircle } from 'react-icons/fa';
+import { HiMenuAlt3 } from 'react-icons/hi';
+import MobileMenu from './MobileMenu';
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location] = useLocation();
   const { t } = useLanguage();
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const isActive = (path: string) => {
     return location === path ? "text-burgundy" : "hover:text-burgundy";
   };
 
   return (
-    <header className="relative bg-white shadow-md">
-      <PatternBorder />
-      
-      <div className="container mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between">
-        {/* Logo and Site Title */}
-        <Link href="/">
-          <div className="flex items-center mb-4 md:mb-0 cursor-pointer">
-            <div className="w-12 h-12 bg-burgundy rounded-full flex items-center justify-center">
-              <span className="text-white font-heading text-xl">ቤተ</span>
+    <header className="relative bg-white">
+      <PatternBorder className="h-1" />
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex justify-between items-center">
+          {/* Logo and Site Title */}
+          <Link href="/" className="flex items-center">
+            <div className="w-10 h-10 bg-burgundy rounded-full flex items-center justify-center">
+              <span className="text-white font-heading text-lg">ቤተ</span>
             </div>
-            <div className="ml-4">
-              <h1 className="font-heading text-2xl md:text-3xl text-burgundy">Ethiopian Orthodox</h1>
-              <p className="text-sm text-gold font-semibold tracking-wide">Spiritual Resources Portal</p>
+            <div className="ml-3">
+              <h1 className="font-heading text-xl text-burgundy sm:text-lg">Xofoo Misirroo Q/Gabra Kiristoos</h1>
+              <p className="text-xs text-gold font-semibold tracking-wide hidden sm:block">Spiritual Resources Portal</p>
             </div>
-          </div>
-        </Link>
-        
-        {/* Navigation */}
-        <div className="flex flex-col md:flex-row items-center">
-          <nav className="hidden md:flex space-x-8 font-medium mr-6">
-            <Link href="/">
-              <a className={`transition duration-300 ${isActive("/")}`}>{t('navItems', 'home')}</a>
-            </Link>
-            <Link href="/teachings">
-              <a className={`transition duration-300 ${isActive("/teachings")}`}>{t('navItems', 'teachings')}</a>
-            </Link>
-            <Link href="/calendar">
-              <a className={`transition duration-300 ${isActive("/calendar")}`}>{t('navItems', 'calendar')}</a>
-            </Link>
-            <Link href="/prayers">
-              <a className={`transition duration-300 ${isActive("/prayers")}`}>{t('navItems', 'prayers')}</a>
-            </Link>
-            <Link href="/churches">
-              <a className={`transition duration-300 ${isActive("/churches")}`}>{t('navItems', 'churches')}</a>
-            </Link>
-          </nav>
-          
-          {/* Language Selector */}
-          <div className="hidden md:block">
-            <LanguageSelector />
-          </div>
-          
+          </Link>
+
           {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden bg-burgundy text-white p-2 rounded-md"
-            onClick={toggleMobileMenu}
-            aria-label="Toggle mobile menu"
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors flex items-center space-x-2"
+            aria-label="Open menu"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <HiMenuAlt3 className="w-6 h-6 text-burgundy" />
           </button>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center">
+            <nav className="flex space-x-8 font-medium mr-6">
+              <Link href="/" className={`transition duration-300 ${isActive("/")}`}>
+                {t('navItems', 'home')}
+              </Link>
+              <Link href="/teachings" className={`transition duration-300 ${isActive("/teachings")}`}>
+                {t('navItems', 'teachings')}
+              </Link>
+              <Link href="/calendar" className={`transition duration-300 ${isActive("/calendar")}`}>
+                {t('navItems', 'calendar')}
+              </Link>
+              <Link href="/prayers" className={`transition duration-300 ${isActive("/prayers")}`}>
+                {t('navItems', 'prayers')}
+              </Link>
+              <Link href="/churches" className={`transition duration-300 ${isActive("/churches")}`}>
+                {t('navItems', 'churches')}
+              </Link>
+            </nav>
+            <div className="flex items-center space-x-2">
+              <NotificationIcon />
+              <LanguageSelector />
+              <div className="relative">
+                <button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Toggle profile menu"
+                >
+                  <FaUserCircle className="w-6 h-6 text-gray-600" />
+                </button>
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                    <div className="p-4 space-y-4">
+                      <Profile />
+                      <div className="border-t border-gray-200 pt-4">
+                        <button
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            // Add your profile settings action here
+                          }}
+                          className="w-full text-left text-sm text-gray-600 hover:text-gray-800"
+                        >
+                          Profile
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       </div>
-      
-      {/* Mobile Navigation Menu */}
-      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </header>
   );
 };

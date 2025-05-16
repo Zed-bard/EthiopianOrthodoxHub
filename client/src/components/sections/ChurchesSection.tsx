@@ -1,114 +1,57 @@
 import { ArrowRight } from "lucide-react";
-import { churches, traditions } from "@/lib/data";
-
-const DecorativeDivider = () => (
-  <div className="flex items-center justify-center mb-12">
-    <div className="h-px bg-gold w-24"></div>
-    <div className="mx-4 text-gold">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-xl">
-        <path d="M12 2l2 4h3l-2.5 3 1 4-3.5-2-3.5 2 1-4L7 6h3z"/>
-        <path d="M12 14v8"/>
-      </svg>
-    </div>
-    <div className="h-px bg-gold w-24"></div>
-  </div>
-);
-
-const ChurchCard = ({ 
-  name, 
-  description, 
-  image, 
-  slug 
-}: { 
-  name: string; 
-  description: string; 
-  image: string; 
-  slug: string;
-}) => (
-  <div className="bg-white rounded-lg overflow-hidden shadow-md mb-6 hover:shadow-lg transition duration-300">
-    <div className="h-64 overflow-hidden">
-      <img 
-        src={image} 
-        alt={name} 
-        className="w-full h-full object-cover"
-      />
-    </div>
-    <div className="p-6">
-      <h4 className="font-heading text-xl text-burgundy mb-2">{name}</h4>
-      <p className="text-gray-700 mb-4">{description}</p>
-      <a href={`/churches/${slug}`} className="inline-block text-darkblue font-semibold hover:text-burgundy transition">
-        Learn More <ArrowRight className="inline-block ml-1 h-4 w-4" />
-      </a>
-    </div>
-  </div>
-);
-
-const TraditionItem = ({ 
-  name, 
-  description, 
-  icon 
-}: { 
-  name: string; 
-  description: string; 
-  icon: string;
-}) => (
-  <div className="bg-white p-6 rounded-lg shadow-md">
-    <div className="flex items-center mb-4">
-      <div className="bg-burgundy w-10 h-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-        <span className="text-gold">{icon}</span>
-      </div>
-      <h4 className="font-heading text-xl text-burgundy">{name}</h4>
-    </div>
-    <p className="text-gray-700 mb-3">{description}</p>
-    <a href="#" className="text-darkblue font-semibold hover:text-burgundy transition">Read More</a>
-  </div>
-);
+import { PatternBorder } from "@/components/ui/pattern-border";
+import { useLanguage } from "@/lib/LanguageContext";
+import { getChurchesByLanguage } from "@/lib/data";
+import { ReactNode } from "react";
 
 const ChurchesSection = () => {
-  // Get 2 featured churches for display
-  const featuredChurches = churches.slice(0, 2);
-  
-  // Get 4 featured traditions for display
-  const featuredTraditions = traditions.slice(0, 4);
+  const { language } = useLanguage();
+  const churches = getChurchesByLanguage(language).slice(0, 3); // Show only first 3 churches
 
   return (
-    <section id="churches" className="py-16 container mx-auto px-6">
-      <h2 className="text-3xl md:text-4xl font-heading text-burgundy text-center mb-2">Churches & Traditions</h2>
-      <p className="text-center text-gray-600 mb-8">Sacred spaces and cultural heritage</p>
-      
-      <DecorativeDivider />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-        {/* Iconic Churches Section */}
-        <div>
-          <h3 className="text-2xl font-heading text-burgundy mb-6">Iconic Churches</h3>
-          
-          {featuredChurches.map((church) => (
-            <ChurchCard 
-              key={church.id}
-              name={church.name}
-              description={church.description}
-              image={church.imageUrl}
-              slug={church.slug}
-            />
+    <section className="py-16 bg-gray-50">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-heading text-burgundy mb-4">
+            Maatiwwaan Misirroo Q/Gabra-Kiristos
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Jaalala Afuura fi Obbolummaa Dhugaa
+          </p>
+          <PatternBorder className="mt-6" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {churches.map((church) => (
+            <div key={church.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+              <div className="h-48 overflow-hidden">
+                <img
+                  src={church.imageUrl}
+                  alt={typeof church.name === 'string' ? church.name : 'Church image'}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h3 className="font-heading text-xl text-burgundy mb-3">{church.name as unknown as ReactNode}</h3>
+                <p className="text-gray-700 mb-4 line-clamp-3">{church.description as unknown as ReactNode}</p>
+                <a
+                  href={`/churches#${church.slug}`}
+                  className="inline-flex items-center text-darkblue font-semibold hover:text-burgundy transition"
+                >
+                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                </a>
+              </div>
+            </div>
           ))}
         </div>
-        
-        {/* Traditions Section */}
-        <div>
-          <h3 className="text-2xl font-heading text-burgundy mb-6">Sacred Traditions</h3>
-          
-          {/* Traditions List */}
-          <div className="space-y-6">
-            {featuredTraditions.map((tradition) => (
-              <TraditionItem 
-                key={tradition.id}
-                name={tradition.name}
-                description={tradition.description}
-                icon={tradition.icon}
-              />
-            ))}
-          </div>
+
+        <div className="text-center">
+          <a
+            href="/churches"
+            className="inline-flex items-center px-6 py-3 bg-burgundy text-white rounded-lg hover:bg-darkblue transition duration-300"
+          >
+            Explore All Teachings <ArrowRight className="ml-2 h-5 w-5" />
+          </a>
         </div>
       </div>
     </section>

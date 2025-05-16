@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-heading: 'Times New Roman', 'Cinzel', Georgia, serif;
+    
+    --background: 40 33% 98%;
+    --foreground: 350 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 350 10% 10%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 350 10% 10%;
+ 
+    --primary: 350 75% 25%;
+    --primary-foreground: 40 33% 98%;
+ 
+    --secondary: 45 40% 55%;
+    --secondary-foreground: 350 75% 25%;
+ 
+    --muted: 40 10% 94%;
+    --muted-foreground: 350 10% 40%;
+ 
+    --accent: 45 40% 55%;
+    --accent-foreground: 350 75% 25%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 40 33% 98%;
+
+    --border: 350 10% 85%;
+    --input: 350 10% 85%;
+    --ring: 350 75% 25%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 350 10% 10%;
+    --foreground: 40 33% 98%;
+ 
+    --card: 350 10% 12%;
+    --card-foreground: 40 33% 98%;
+ 
+    --popover: 350 10% 12%;
+    --popover-foreground: 40 33% 98%;
+ 
+    --primary: 45 40% 55%;
+    --primary-foreground: 350 10% 10%;
+ 
+    --secondary: 350 75% 25%;
+    --secondary-foreground: 40 33% 98%;
+ 
+    --muted: 350 10% 20%;
+    --muted-foreground: 40 33% 85%;
+ 
+    --accent: 350 75% 25%;
+    --accent-foreground: 40 33% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 40 33% 98%;
+ 
+    --border: 350 10% 20%;
+    --input: 350 10% 20%;
+    --ring: 45 40% 55%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply font-sans;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-burgundy leading-tight font-bold tracking-wide;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-burgundy text-white hover:bg-burgundy-700 font-semibold py-2 px-4 rounded-md transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-gold text-burgundy hover:bg-gold-600 font-semibold py-2 px-4 rounded-md transition-colors;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-heading text-burgundy text-center mb-4;
+  }
+  
+  .section-subtitle {
+    @apply text-center text-gray-600 mb-8 max-w-2xl mx-auto;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden;
+  }
+  
+  .nav-link {
+    @apply text-burgundy hover:text-gold transition-colors duration-200;
+  }
+  
+  .decorative-border {
+    @apply border-2 border-gold p-6 rounded-lg relative;
+  }
+  
+  .decorative-border::before {
+    content: '';
+    @apply absolute -top-2 -left-2 w-4 h-4 border-t-2 border-l-2 border-burgundy;
+  }
+  
+  .decorative-border::after {
+    content: '';
+    @apply absolute -bottom-2 -right-2 w-4 h-4 border-b-2 border-r-2 border-burgundy;
+  }
+} 

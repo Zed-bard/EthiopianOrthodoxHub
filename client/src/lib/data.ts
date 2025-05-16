@@ -1,211 +1,809 @@
-import { Prayer, Church, Tradition, Teaching } from "./types";
+import { Prayer, Teaching } from "./types";
+import { Language } from "./LanguageContext";
+
+export interface LanguageString {
+  en: string;
+  am: string;
+  om: string;
+  ti: string;
+}
+
+export interface Church {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  slug: string;
+  content: {
+    [key: string]: string;
+  };
+}
+
+export interface Tradition {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  content: {
+    [key: string]: string;
+  };
+}
+
+export type PrayerCategory = {
+  en: "Morning Prayer" | "Evening Prayer" | "Liturgical Hymn" | "Fasting Prayer" | "Daily Prayer";
+  am: "የማልዳ ጸሎት" | "የማታ ጸሎት" | "የሥርዓት መዝሙር" | "የጾም ጸሎት" | "የዕለት ጸሎት";
+  om: "Kadhannaa Ganamaa" | "Kadhannaa Galgalaa" | "Faarfannaa Sirnaa" | "Kadhannaa Soomaa" | "Kadhannaa Guyyaa";
+  ti: "ጸሎት ንግሆ" | "ጸሎት ማታ" | "መዝሙር ስርዓት" | "ጸሎት ጾም" | "ዕለታዊ ጸሎት";
+};
+
+/**
+ * Helper function to get localized content by language
+ * Handles both language codes and full language names
+ */
+export function getLocalizedContent<T extends Record<string, string>>(
+  content: T,
+  language: string
+): string {
+  // Map full language names to language codes if needed
+  const languageMap: Record<string, keyof T> = {
+    'English': 'en',
+    'Amharic': 'am',
+    'Afaan Oromoo': 'om',
+    'Tigrinya': 'ti',
+    'en': 'en',
+    'am': 'am',
+    'om': 'om',
+    'ti': 'ti'
+  };
+
+  // Get the proper language key based on input
+  const langKey = languageMap[language] as keyof T;
+  
+  // Return the content in the requested language, fall back to English if not available
+  return content[langKey] || content['en'];
+}
+
+export const prayerCategories: Record<keyof PrayerCategory, PrayerCategory[keyof PrayerCategory][]> = {
+  en: ["Morning Prayer", "Evening Prayer", "Liturgical Hymn", "Fasting Prayer", "Daily Prayer"],
+  am: ["የማልዳ ጸሎት", "የማታ ጸሎት", "የሥርዓት መዝሙር", "የጾም ጸሎት", "የዕለት ጸሎት"],
+  om: ["Kadhannaa Ganamaa", "Kadhannaa Galgalaa", "Faarfannaa Sirnaa", "Kadhannaa Soomaa", "Kadhannaa Guyyaa"],
+  ti: ["ጸሎት ንግሆ", "ጸሎት ማታ", "መዝሙር ስርዓት", "ጸሎት ጾም", "ዕለታዊ ጸሎት"]
+};
+
+// Add the new function to get prayer categories by language
+export function getPrayerCategoriesByLanguage(language: string): string[] {
+  const languageKey = language as keyof PrayerCategory;
+  return prayerCategories[languageKey] || prayerCategories.en;
+}
+
+// Gets a teaching by language
+export function getTeachingsByLanguage(language: string): 
+  Array<{id: number, title: string, slug: string, shortDescription: string, content: string, imageUrl: string}> {
+  return teachings.map(teaching => ({
+    id: teaching.id,
+    title: getLocalizedContent(teaching.title, language),
+    slug: teaching.slug,
+    shortDescription: getLocalizedContent(teaching.shortDescription, language),
+    content: getLocalizedContent(teaching.content, language),
+    imageUrl: teaching.imageUrl
+  }));
+}
+
+// Gets prayers by language
+export function getPrayersByLanguage(language: string): 
+  Array<{id: number, title: string, originalTitle: string, slug: string, description: string, content: {time: string, significance: string[]}, category: string, imageUrl: string}> {
+  return prayers.map(prayer => ({
+    id: prayer.id,
+    title: getLocalizedContent(prayer.title, language),
+    originalTitle: prayer.originalTitle,
+    slug: prayer.slug,
+    description: getLocalizedContent(prayer.description, language),
+    content: {
+      time: prayer.content.time,
+      significance: prayer.content.significance[language as keyof typeof prayer.content.significance] || prayer.content.significance.en
+    },
+    category: getLocalizedContent(prayer.category, language),
+    imageUrl: prayer.imageUrl
+  }));
+}
+
+// Gets churches by language
+export function getChurchesByLanguage(language: string): Church[] {
+  return churches.map(church => ({
+    ...church,
+    description: church.content[language] || church.content.en
+  }));
+}
+
+// Gets traditions by language
+export function getTraditionsByLanguage(language: string): Tradition[] {
+  return traditions.map(tradition => ({
+    ...tradition,
+    description: tradition.content[language] || tradition.content.en
+  }));
+}
 
 export const teachings: Teaching[] = [
   {
     id: 1,
-    title: "Foundations of Faith",
+    title: {
+      en: "Foundations of Faith",
+      am: "የእምነት መሰረቶች",
+      om: "Bu'uura Amantaa",
+      ti: "መሰረታት እምነት"
+    },
     slug: "foundations-of-faith",
-    shortDescription: "The core beliefs and theological foundations of the Ethiopian Orthodox Tewahedo Church, including its unique Christology.",
-    content: "The Ethiopian Orthodox Tewahedo Church is one of the oldest Christian churches in the world, dating back to the 4th century. The term 'Tewahedo' means 'unified' and refers to the belief in the one perfectly unified nature of Christ, a position known as miaphysitism. This is in contrast to the dyophysite position (two natures of Christ) held by most Western churches. The church maintains a strong connection to Old Testament practices while fully embracing the New Testament...",
-    imageUrl: "https://pixabay.com/get/gb770db21c79e358f653cc92b288f483ec79b5c0914fa0741bf2d9d35681ff358ed157de6b81a611180b4db9b4660272ecd51ee395ee88d0664451913a6d72260_1280.jpg"
+    shortDescription: {
+      en: "The Ethiopian Orthodox Tewahedo Church firmly believes in the existence of One God. This God is the creator of all things, visible and invisible, the sustainer of the universe, and the ultimate source of all life and goodness.",
+      am: "የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን በአንድ አምላክ መኖር ታምናለች። ይህ አምላክ የሁሉም ነገር ፈጣሪ፣ የሚታየውና የማይታየው፣ የዓለማት ደጋፊ፣ የሕይወትና የበጎ ነገር ሁሉ ምንጭ ነው። (Placeholder - verify from Barumsaa.md)",
+      om: "Manni Amantaa Ortodoksii Tawaahidoo Itoophiyaa Waaqayyo tokkicha jiraachuutti cimsee amana. Waaqni kun uumaa waan hundumaa kan mul'atuufi hin mul'anne, kan addunyaa kana deeggaru, madda jireenyaafi gaarummaa hundaa isa guddaadha. (Placeholder - verify from Barumsaa.md)",
+      ti: "ቤተ ክርስቲያን ኦርቶዶክስ ተዋሕዶ ኢትዮጵያ ብህላወ ሓደ ኣምላኽ ኣጽኒዓ ትኣምን። እዚ ኣምላኽ እዚ ፈጣሪ ኩሉ ነገር፡ ዝርአን ዘይርአን፡ ደጋፊ ዓለማት፡ ናይ ህይወትን ሰናይ ነገርን ዘበለ ምንጪ እዩ። (Placeholder - verify from Barumsaa.md)"
+    },
+    content: {
+      en: "The Ethiopian Orthodox Tewahedo Church firmly believes in the existence of One God. This God is the creator of all things, visible and invisible, the sustainer of the universe, and the ultimate source of all life and goodness. This section would typically elaborate further on the attributes of God, the nature of faith, and other core tenets related to the foundations of belief within the church.",
+      am: "የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተክርስቲያን በአንድ አምላክ መኖር ታምናለች። ይህ አምላክ የሁሉም ነገር ፈጣሪ፣ የሚታየውና የማይታየው፣ የዓለማት ደጋፊ፣ የሕይወትና የበጎ ነገር ሁሉ ምንጭ ነው። ይህ ክፍል ስለ እግዚአብሔር ባህርያት፣ ስለ እምነት ምንነት እና ከእምነት መሰረቶች ጋር የተያያዙ ሌሎች ዋና ዋና መርሆዎችን በስፋት ያብራራል። (Placeholder - verify from Barumsaa.md)",
+      om: "Manni Amantaa Ortodoksii Tawaahidoo Itoophiyaa Waaqayyo tokkicha jiraachuutti cimsee amana. Waaqni kun uumaa waan hundumaa kan mul'atuufi hin mul'anne, kan addunyaa kana deeggaru, madda jireenyaafi gaarummaa hundaa isa guddaadha. Kutaan kun waa'ee amaloota Waaqayyoo, waa'ee amantaa fi bu'uura amantaa mana kiristaanaa keessatti argaman irratti bal'inaan ibsa. (Placeholder - verify from Barumsaa.md)",
+      ti: "ቤተ ክርስቲያን ኦርቶዶክስ ተዋሕዶ ኢትዮጵያ ብህላወ ሓደ ኣምላኽ ኣጽኒዓ ትኣምን። እዚ ኣምላኽ እዚ ፈጣሪ ኩሉ ነገር፡ ዝርአን ዘይርአን፡ ደጋፊ ዓለማት፡ ናይ ህይወትን ሰናይ ነገርን ዘበለ ምንጪ እዩ። እዚ ክፍሊ እዚ ብዛዕባ ባህርያት ኣምላኽ፡ ባህሪ እምነትን ካልኦት ምስ መሰረታት እምነት ቤተ ክርስቲያን ዝተኣሳሰሩ ዋና ዋና መትከላት ብዝርዝር ይገልጽ። (Placeholder - verify from Barumsaa.md)"
+    },
+    imageUrl: "/images/teachings/faith.jpg"
   },
   {
     id: 2,
-    title: "Sacred Scriptures",
-    slug: "sacred-scriptures",
-    shortDescription: "The Ethiopian Biblical canon, which includes unique books like Enoch, Jubilees, and additional texts not found in other traditions.",
-    content: "The Ethiopian Orthodox Tewahedo Church has the largest and most diverse biblical canon of any Christian church. In addition to the 66 books accepted by most Protestant denominations, the Ethiopian canon includes books such as Enoch, Jubilees, 1-3 Meqabyan (not the same as the Maccabees), and others. The Book of Enoch, in particular, is only fully preserved in Ge'ez (ancient Ethiopian language) and provides important background for New Testament concepts...",
-    imageUrl: "https://images.unsplash.com/photo-1528396518501-b53b655eb9b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"
+    title: {
+      en: "The Mystery of the Trinity",
+      am: "የሥላሴ ምስጢር (Placeholder)",
+      om: "Iccitii Sillaasee (Placeholder)",
+      ti: "ምስጢረ ሥላሴ (Placeholder)"
+    },
+    slug: "mystery-of-the-trinity",
+    shortDescription: {
+      en: "Exploring the doctrine of the Holy Trinity: One God in three persons - Father, Son, and Holy Spirit.",
+      am: "Placeholder Amharic short description for The Mystery of the Trinity.",
+      om: "Placeholder Afaan Oromoo short description for The Mystery of the Trinity.",
+      ti: "Placeholder Tigrinya short description for The Mystery of the Trinity."
+    },
+    content: {
+      en: "Detailed explanation of the Holy Trinity, its significance in Orthodox theology, and scriptural basis. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for The Mystery of the Trinity. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for The Mystery of the Trinity. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for The Mystery of the Trinity. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/trinity.jpg"
   },
   {
     id: 3,
-    title: "Saints & Icons",
-    slug: "saints-and-icons",
-    shortDescription: "The veneration of saints and the rich tradition of Ethiopian iconography, with its distinctive style and spiritual symbolism.",
-    content: "The veneration of saints plays a vital role in Ethiopian Orthodox spirituality. Ethiopian Orthodox iconography is characterized by its vibrant colors, stylized figures with large expressive eyes, and the use of traditional patterns. Each saint is typically depicted with specific attributes and symbols related to their life and ministry. Among the most venerated saints are St. Mary (given special honor), St. George, and St. Michael the Archangel...",
-    imageUrl: "https://pixabay.com/get/ga2c602fbd47a7d8f728cf65f88770582c25aeac777cc457a5836d89959cdf3ac4ecec4412dc82f0d6bf6009be8246ad6a7e7e05832a5984a6d19270bd27220a0_1280.jpg"
+    title: {
+      en: "God's Providence",
+      am: "የእግዚአብሔር ጥበቃ (Placeholder)",
+      om: "Tiksitii Waaqayyoo (Placeholder)",
+      ti: "ኣጠቓቕማ ኣምላኽ (Placeholder)"
+    },
+    slug: "gods-providence",
+    shortDescription: {
+      en: "Understanding God's continuous care, guidance, and governance over creation and human affairs.",
+      am: "Placeholder Amharic short description for God's Providence.",
+      om: "Placeholder Afaan Oromoo short description for God's Providence.",
+      ti: "Placeholder Tigrinya short description for God's Providence."
+    },
+    content: {
+      en: "Discussion on divine providence, God's intervention in the world, and trust in His plan. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for God's Providence. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for God's Providence. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for God's Providence. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/providence.jpg"
   },
   {
-    id: 4,
-    title: "Divine Liturgy",
-    slug: "divine-liturgy",
-    shortDescription: "The structure and meaning of the Ethiopian Orthodox Liturgy (Qeddase), one of the most ancient forms of Christian worship.",
-    content: "The Ethiopian Orthodox Divine Liturgy (Qeddase) is one of the most ancient forms of Christian worship, believed to be derived from the Liturgy of St. Mark. The service is conducted in Ge'ez, the ancient liturgical language, and can last several hours. The liturgy is rich in symbolism, with specific movements, gestures, and instruments like the prayer stick (mequamia), sistrum, and drums. The church follows different anaphoras (eucharistic prayers) attributed to various apostles and church fathers...",
-    imageUrl: "https://pixabay.com/get/g0711c1d7d08c8af4834d6f1e01a0a82ed9f48c3ea0cdfd7e1e2fb3c29cb31abb0f3d195cff546b3cc8bc8c7e4abc99a8cb31a3a5d55fdf06dd1d67aaee92c05a_1280.jpg"
-  },
-  {
-    id: 5,
-    title: "Monastic Tradition",
-    slug: "monastic-tradition",
-    shortDescription: "The rich history and practices of Ethiopian monasticism, which has preserved the faith through centuries.",
-    content: "Monasticism has been central to Ethiopian Orthodox Christianity since its earliest days. The monastic tradition was established in the 5th century by the Nine Saints, monks who came from various parts of the Byzantine Empire. Ethiopian monastics follow strict ascetic practices including extended fasting periods, regular prayer vigils, and often live in remote locations. Some of the most famous monasteries include Debre Damo (accessible only by rope), the cliff-top monasteries of Gheralta, and the lake monasteries of Lake Tana...",
-    imageUrl: "https://pixabay.com/get/g18b0d6e6bcb6deba18ebf32c4eff3d17fb7c8adec73c1ad1a90fb45f03c6a71a0c8e881d0b88cf5c2bcef5cce5d2d74d0b5ec60dc3d52c1d5e55a0f81e9b0e35_1280.jpg"
+    id: 5, // Skipping ID 4 as it's merged
+    title: {
+      en: "Angels",
+      am: "መላእክት (Placeholder)",
+      om: "Ergamoota (Placeholder)",
+      ti: "መላእኽቲ (Placeholder)"
+    },
+    slug: "angels",
+    shortDescription: {
+      en: "The Orthodox teaching on angels, their nature, hierarchy, and role in God's plan and human life.",
+      am: "Placeholder Amharic short description for Angels.",
+      om: "Placeholder Afaan Oromoo short description for Angels.",
+      ti: "Placeholder Tigrinya short description for Angels."
+    },
+    content: {
+      en: "Exploring the different orders of angels, their service to God, and their interactions with humanity. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for Angels. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for Angels. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for Angels. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/angels.jpg"
   },
   {
     id: 6,
-    title: "Church History",
+    title: {
+      en: "Church History",
+      am: "የቤተክርስቲያን ታሪክ",
+      om: "Seenaa Mana Kiristaanaa",
+      ti: "ታሪኽ ቤተ ክርስቲያን"
+    },
     slug: "church-history",
-    shortDescription: "The fascinating journey of the Ethiopian Orthodox Church from its founding to the present day.",
-    content: "The history of Christianity in Ethiopia begins in the 1st century with the conversion of the Ethiopian eunuch by Philip as recorded in Acts 8:26-40. However, the official conversion of Ethiopia is traditionally attributed to Frumentius, who converted King Ezana of Axum in the 4th century. Throughout its history, the Ethiopian Orthodox Church developed independently from European Christianity while maintaining connections with Coptic and other Oriental Orthodox churches. The church survived the expansion of Islam in the region and later resisted Catholic and Protestant missionary efforts, maintaining its unique traditions...",
-    imageUrl: "https://pixabay.com/get/g2bf8a9de89e84fec5e0d87d17de62d8c5ab9bbd452a3da16bf5afc9c0fc47b6f2a16ea1c14d53e8cd41acfbfc52ecd318a4ef1a28ffdc94f339d5df15a5e2eec_1280.jpg"
-  }
-];
-
-export type PrayerCategory = "Morning Prayer" | "Evening Prayer" | "Liturgical Hymn" | "Fasting Prayer";
-
-export const prayers: Prayer[] = [
-  {
-    id: 1,
-    title: "Prayer of Absolution",
-    originalTitle: "ጸሎተ ፍትሐት",
-    slug: "prayer-of-absolution",
-    description: "The Prayer of Absolution, recited at the beginning of many services including the Divine Liturgy.",
-    content: "O Lord our God, good and merciful, who by the holy mouth of Your only-begotten Son, our Lord, God and Savior Jesus Christ, have spoken concerning Your holy Apostles, saying, 'Whatsoever you shall bind on earth shall be bound in heaven, and whatsoever you shall loose on earth shall be loosed in heaven.' We ask You now, O good and Lover of mankind, for Your servants my fathers, my brothers and my weakness, who are bowing their heads before Your holy glory: grant us Your mercy and loose each one of us from the chain of our sins...",
-    category: "Liturgical Hymn",
-    imageUrl: "https://images.unsplash.com/photo-1520182205149-1e5e4e7329b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"
+    shortDescription: {
+      en: "A brief overview of the history of the Ethiopian Orthodox Tewahedo Church, from its apostolic origins to the present day.",
+      am: "የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን ታሪክ ከአ apostolic አመጣጥ እስከ ዛሬ ድረስ አጭር ቅኝት። (Verify from Barumsaa.md)",
+      om: "Seenaa Mana Kiristaanaa Ortodoksii Tawaahidoo Itoophiyaa, jalqaba Ergamootarraa kaasee hanga har'aatti gabaabaatti. (Verify from Barumsaa.md)",
+      ti: "ታሪኽ ቤተ ክርስቲያን ኦርቶዶክስ ተዋሕዶ ኢትዮጵያ ካብ መበገሲኡ ክሳብ ሎሚ ዘሎ ምሕጻር። (Verify from Barumsaa.md)"
+    },
+    content: {
+      en: "Key events, figures, and developments in the rich history of the EOTC. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for Church History. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for Church History. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for Church History. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/history.jpg"
   },
   {
-    id: 2,
-    title: "Holy, Holy, Holy",
-    originalTitle: "ቅዱስ ቅዱስ ቅዱስ",
-    slug: "holy-holy-holy",
-    description: "The Trisagion (Holy, Holy, Holy), a powerful hymn that invokes the Holy Trinity during worship.",
-    content: "Holy, Holy, Holy, Lord God of Hosts, Heaven and earth are full of the majesty of Your glory. Hosanna in the highest. Blessed is He who comes in the name of the Lord. Hosanna in the highest. Holy, Holy, Holy are You truly, O Lord our God. Save us all, O good and merciful Lord. Holy God, Holy Mighty, Holy Immortal, who was born of the Virgin, have mercy upon us...",
-    category: "Liturgical Hymn",
-    imageUrl: "https://pixabay.com/get/g48ad4a97405e4ff498cdf998a1d04b149ee0c3d65053413113cb33571890b65afef417bcdde03f1ec0667acc7ab99abc3e6e8ee0c51af551be19859e87578396_1280.jpg"
+    id: 7,
+    title: {
+      en: "Demons/Satans",
+      am: "አጋንንት/ሰይጣናት (Placeholder)",
+      om: "Jinniiwwan/Sheyxaanota (Placeholder)",
+      ti: "ኣጋንንቲ/ሰይጣናት (Placeholder)"
+    },
+    slug: "demons-satans",
+    shortDescription: {
+      en: "Understanding the Orthodox perspective on demons, Satan, their nature, and influence.",
+      am: "Placeholder Amharic short description for Demons/Satans.",
+      om: "Placeholder Afaan Oromoo short description for Demons/Satans.",
+      ti: "Placeholder Tigrinya short description for Demons/Satans."
+    },
+    content: {
+      en: "Teachings on spiritual warfare, the fall of angels, and the power of Christ over evil forces. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for Demons/Satans. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for Demons/Satans. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for Demons/Satans. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/demons.jpg"
   },
   {
-    id: 3,
-    title: "Praise of Mary",
-    originalTitle: "ውዳሴ ማርያም",
-    slug: "praise-of-mary",
-    description: "The Praise of Mary, a collection of hymns offered to the Virgin Mary, sung during evening services.",
-    content: "Rejoice, O our Lady, Mother of God. Rejoice, O You who are the rejoicing of the angels. Rejoice, O pure one, preached by the prophets. Rejoice, O You who have found grace, the Lord is with You. Rejoice, O You who have received the joy of the world from the angel. Rejoice, O You who have given birth to the Creator. Rejoice, O You who are worthy to be called the Mother of Christ, the King of all and our God...",
-    category: "Evening Prayer",
-    imageUrl: "https://pixabay.com/get/g0c0d8afe71cf72d4999ee8c48c3eff6104482a4b89ffcb4c7a56adf77c7fdb982b06a28d89c471af7d8343d9bf3f02015b2215fedd8596d8da30235b1cb7a6c9_1280.jpg"
+    id: 8,
+    title: {
+      en: "Human Nature and Fall",
+      am: "የሰው ልጅ ተፈጥሮና ውድቀት (Placeholder)",
+      om: "Uumama Namaafi Kufaatii (Placeholder)",
+      ti: "ተፈጥሮ ሰብን ውድቀትን (Placeholder)"
+    },
+    slug: "human-nature-fall",
+    shortDescription: {
+      en: "The creation of humankind in God's image, the concept of original sin, and the consequences of the fall.",
+      am: "Placeholder Amharic short description for Human Nature and Fall.",
+      om: "Placeholder Afaan Oromoo short description for Human Nature and Fall.",
+      ti: "Placeholder Tigrinya short description for Human Nature and Fall."
+    },
+    content: {
+      en: "Exploring human nature before and after the fall, free will, and the need for salvation. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for Human Nature and Fall. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for Human Nature and Fall. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for Human Nature and Fall. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/human_nature.jpg"
   },
   {
-    id: 4,
-    title: "Prayer Before Meals",
-    originalTitle: "ጸሎት ቅድመ ብልዐት",
-    slug: "prayer-before-meals",
-    description: "A prayer of thanksgiving and blessing said before partaking of food.",
-    content: "O Lord our God, of whose abundance we are about to partake, bless this food and drink set before us. For You are the fountain of all blessing, and to You we ascribe glory, to the Father, and to the Son, and to the Holy Spirit, now and forever and unto the ages of all ages. Amen.",
-    category: "Morning Prayer",
-    imageUrl: "https://pixabay.com/get/g9b65efe19ca09fc28b95e66e4f0b4f5f1c3b2629f9abcd9fa6df3b56c9bd05c10b9c7f0bf3613ac90e8a4e2a9b06c5ffb2cb5a3e45cd39e87fc3df0c5d3ce04a_1280.jpg"
+    id: 9,
+    title: {
+      en: "The Mystery of Incarnation",
+      am: "የሥጋዌ ምስጢር (Placeholder)",
+      om: "Iccitii Foon Uffachuu (Placeholder)",
+      ti: "ምስጢረ ሥጋዌ (Placeholder)"
+    },
+    slug: "mystery-of-incarnation",
+    shortDescription: {
+      en: "The doctrine of the Incarnation: Jesus Christ as fully God and fully human.",
+      am: "Placeholder Amharic short description for The Mystery of Incarnation.",
+      om: "Placeholder Afaan Oromoo short description for The Mystery of Incarnation.",
+      ti: "Placeholder Tigrinya short description for The Mystery of Incarnation."
+    },
+    content: {
+      en: "Understanding the two natures of Christ, His virgin birth, and the significance of God becoming man. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for The Mystery of Incarnation. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for The Mystery of Incarnation. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for The Mystery of Incarnation. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/incarnation.jpg"
   },
   {
-    id: 5,
-    title: "Lenten Prayer of St. Ephrem",
-    originalTitle: "ጸሎት ለጾም ዘቅዱስ አፍሬም",
-    slug: "lenten-prayer-st-ephrem",
-    description: "A profound prayer of repentance recited during the Great Fast (Lent).",
-    content: "O Lord and Master of my life, give me not the spirit of sloth, idle curiosity, lust for power and idle talk. But grant unto me, Thy servant, a spirit of chastity, humility, patience and love. O Lord and King, grant me to see mine own faults and not to judge my brother. For blessed art Thou unto the ages of ages. Amen.",
-    category: "Fasting Prayer",
-    imageUrl: "https://pixabay.com/get/g31acd32f9cdce10fde7ce7ddd41ac0acf5af26ce7c0fcb3e13fe70e76e7f97aee57b3dc0e69d909af8f8db8dd3d9b9bf1d5bf48b6b90f2eea1fc98a661bac8dd_1280.jpg"
+    id: 10,
+    title: {
+      en: "The Passion, Death, Resurrection, and Ascension of Christ",
+      am: "የክርስቶስ ሕማማት፣ ሞት፣ ትንሣኤና ዕርገት (Placeholder)",
+      om: " rakkina, Du'a, Du'aa Ka'uu fi Ol Fudhatamuu Kiristoos (Placeholder)",
+      ti: "ሕማማት፣ ሞት፣ ትንሣኤን ዕርገትን ክርስቶስ (Placeholder)"
+    },
+    slug: "passion-christ",
+    shortDescription: {
+      en: "The central events of Christian faith: Christ's suffering, crucifixion, resurrection, and ascension.",
+      am: "Placeholder Amharic short description for The Passion, Death, Resurrection, and Ascension of Christ.",
+      om: "Placeholder Afaan Oromoo short description for The Passion, Death, Resurrection, and Ascension of Christ.",
+      ti: "Placeholder Tigrinya short description for The Passion, Death, Resurrection, and Ascension of Christ."
+    },
+    content: {
+      en: "Detailed exploration of the theological meaning of Christ's passion, its fulfillment of prophecy, the victory over death through resurrection, and the glory of ascension. (Content from Barumsaa.md to be added here)",
+      am: "Placeholder Amharic content for The Passion, Death, Resurrection, and Ascension of Christ. (Content from Barumsaa.md to be added here)",
+      om: "Placeholder Afaan Oromoo content for The Passion, Death, Resurrection, and Ascension of Christ. (Content from Barumsaa.md to be added here)",
+      ti: "Placeholder Tigrinya content for The Passion, Death, Resurrection, and Ascension of Christ. (Content from Barumsaa.md to be added here)"
+    },
+    imageUrl: "/images/teachings/passion.jpg"
   },
   {
-    id: 6,
-    title: "Morning Prayer of Thanksgiving",
-    originalTitle: "ጸሎተ አመስጋኒት ንግህ",
-    slug: "morning-prayer-thanksgiving",
-    description: "A prayer offered at the beginning of the day, giving thanks for God's protection through the night.",
-    content: "We give You thanks, Holy Lord, Almighty Father, Eternal God, who has safely brought us to the beginning of this day. Defend us today by Your mighty power, that we may not fall into sin, but that all our words may so proceed and all our thoughts and works may be directed to do that which is just in Your sight. Through our Lord Jesus Christ, Your Son, who lives and reigns with You in the unity of the Holy Spirit, God, forever and ever. Amen.",
-    category: "Morning Prayer",
-    imageUrl: "https://pixabay.com/get/g1aebf42c22c98339a7f1f93be82c3e2bcc8ac71fe0a2df8d0bcbab6a2f7d85cd6ace46f68ad24e83b79b5a4f2b8d49e0e29bf9cc3c8889dc69ec06e9ee15f76f_1280.jpg"
+    id: 11,
+    title: {
+      en: "New Spiritual Book",
+      am: "አዲስ መንፈሳዊ መጽሐፍ",
+      om: "Kitaaba Hafuuraa Haaraa",
+      ti: "ሓድሽ መንፈሳዊ መጽሓፍ"
+    },
+    slug: "new-spiritual-book",
+    shortDescription: {
+      en: "Discover sacred texts and spiritual literature that guide our faith journey and deepen our understanding of Orthodox teachings.",
+      am: "የእምነታችንን ጉዞ የሚመሩና የኦርቶዶክስ ትምህርቶችን ግንዛቤ የሚያዳብሩ ቅዱስ ጽሑፎችንና መንፈሳዊ ድርሳናትን ያግኙ።",
+      om: "Barreeffamoota qulqulluu fi kitaabota hafuuraa imala amantii keenyaa qajeelchanii fi hubannaa barsiisa Orthodoksii keenyaa gabbisan argadhaa.",
+      ti: "ቅዱሳት ጽሑፋትን መንፈሳዊ ድርሳናትን ነቲ ናይ እምነትና ጉዕዞ ዝመርሑን ናይ ኦርቶዶክሳዊ ትምህርትታትና ፍልጠት ዘዕምቑን ርኸቡ።"
+    },
+    content: {
+      en: "A comprehensive collection of spiritual texts and literature that enriches our understanding of Orthodox faith and traditions. These include ancient manuscripts, theological commentaries, and contemporary spiritual writings that illuminate our path to salvation.",
+      am: "የኦርቶዶክስ እምነትና ወግን ግንዛቤያችንን የሚያበለጽጉ መንፈሳዊ ጽሑፎችና ድርሳናት ሰፊ ስብስብ። ይህም ጥንታዊ የእጅ ጽሑፎችን፣ የመለኮታዊ ትርጓሜዎችን እና የዘመናዊ መንፈሳዊ ጽሑፎችን የሚያካትት ሲሆን እነዚህም ወደ ደህንነት የሚወስደውን መንገዳችንን ያበራሉ።",
+      om: "Sasaxabbii guutuu kan barreeffamoota hafuuraa fi ogbarruu hubannaa amantii fi aadaa Orthodoksii keenya bal'isu. Kana keessatti barreeffamoota durii harka, hiikkaa waaqa-qabeessaa, fi barreeffamoota hafuuraa ammayyaa kan karaa fayyinaa keenyaa ibsan dabalata.",
+      ti: "ሰፊ ዝርዝር ናይ መንፈሳዊ ጽሑፋትን ድርሳናትን ነቲ ናይ ኦርቶዶክሳዊ እምነትን ባህልን ፍልጠትና ዘበርኽ። እዚ ድማ ጥንታዊ ኢድ ጽሑፋት፡ መለኮታዊ ትርጓሜታትን ዘመናዊ መንፈሳዊ ጽሑፋትን ዘጠቓልል ኮይኑ፡ ነቲ ናብ ምድሓን ዝወስድ መገድና ዘብርህዎ።"
+    },
+    imageUrl: "/images/teachings/spiritual_book.jpg"
+  },
+  {
+    id: 12,
+    title: {
+      en: "New Prayer",
+      am: "አዲስ ጸሎት",
+      om: "Kadhannaa Haaraa",
+      ti: "ሓድሽ ጸሎት"
+    },
+    slug: "new-prayer",
+    shortDescription: {
+      en: "Learn and practice new prayer forms that strengthen our connection with God and deepen our spiritual life.",
+      am: "ከእግዚአብሔር ጋር ያለንን ግንኙነት የሚያጠናክሩና መንፈሳዊ ሕይወታችንን የሚያዳብሩ አዳዲስ የጸሎት ዘዴዎችን ይማሩና ይለማመዱ።",
+      om: "Akaakuu kadhannaa haaraa walitti dhufeenya keenya Waaqayyoon wajjin jabeessu fi jireenya hafuuraa keenya gabbisan baradhaa, shaakala.",
+      ti: "ሓደሽቲ መገድታት ጸሎት ነቲ ምስ እግዚኣብሔር ዘሎና ርክብ ዘደልድሉን መንፈሳዊ ህይወትና ዘዕምቑን ተማሂርኩምን ለማሚድኩምን።"
+    },
+    content: {
+      en: "Explore sacred prayers handed down through generations, their spiritual significance, and proper methods of prayer that enhance our communion with God. This section includes guidance on personal prayer, communal worship, and meditation practices.",
+      am: "ከትውልድ ወደ ትውልድ የተላለፉ ቅዱስ ጸሎቶችን፣ መንፈሳዊ ጠቀሜታቸውን እና ከእግዚአብሔር ጋር ያለንን ኅብረት የሚያጎለብቱ ትክክለኛ የጸሎት ዘዴዎችን ያስተውሉ። ይህ ክፍል የግል ጸሎት፣ የጋራ አምልኮ እና የማሰላሰል ልምምዶችን ይመራል።",
+      om: "Kadhannoota qulqulluu dhaloota irraa gara dhalootaatti darban, barbaachisummaa hafuuraa isaanii, fi tooftaalee kadhannaa sirrii walitti dhufeenya keenya Waaqayyo waliin cimsaniif qajeelfama argadhaa. Kutaan kun qajeelfama kadhannaa dhuunfaa, kadhannaa gamtaa, fi shaakala xiinxalaa of keessaa qaba.",
+      ti: "ካብ ወለዶ ናብ ወለዶ ዝተሓላለፉ ቅዱሳት ጸሎታት፡ መንፈሳዊ ጠቕሚኦምን ነቲ ምስ እግዚኣብሔር ዘሎና ሕብረት ዘደልድሉ ቅኑዓት ኣገባባት ጸሎትን ኣስተውዕሉ። እዚ ክፍሊ እዚ ናይ ውልቃዊ ጸሎት፡ ሓባራዊ ኣምልኾን ናይ ምሕላይ ልምምድን መምርሒ የጠቓልል።"
+    },
+    imageUrl: "/images/teachings/new_prayer.jpg"
+  },
+  {
+    id: 13,
+    title: {
+      en: "New Education",
+      am: "አዲስ ትምህርት",
+      om: "Barumsa Haaraa",
+      ti: "ሓድሽ ትምህርቲ"
+    },
+    slug: "new-education",
+    shortDescription: {
+      en: "Modern approaches to Orthodox education that help us understand and apply ancient wisdom in contemporary life.",
+      am: "ጥንታዊ ጥበብን በዘመናዊ ሕይወት ለመረዳትና ለመተግበር የሚያግዙ ዘመናዊ የኦርቶዶክስ ትምህርት አቀራረቦች።",
+      om: "Mala barnoota Orthodoksii ammayyaa ogummaa durii jireenya ammaa keessatti hubachuuf fi hojiirra oolchuuf nu gargaaru.",
+      ti: "ዘመናዊ ኣገባባት ኦርቶዶክሳዊ ትምህርቲ ነቲ ጥንታዊ ጥበብ ኣብ ዘመናዊ ህይወት ክንርድኦን ክንጥቀመሉን ዝሕግዙ።"
+    },
+    content: {
+      en: "Discover innovative educational methods that bridge traditional Orthodox teachings with contemporary learning needs. This section explores digital resources, interactive study materials, and modern pedagogical approaches while maintaining the authenticity of our faith traditions.",
+      am: "ባህላዊ የኦርቶዶክስ ትምህርቶችን ከዘመናዊ የመማር ፍላጎቶች ጋር የሚያገናኙ ዘመናዊ የትምህርት ዘዴዎችን ያግኙ። ይህ ክፍል የእምነት ወጎቻችንን ትክክለኛነት እያስጠበቀ፣ ዲጂታል ሀብቶችን፣ ተናባቢ የጥናት ቁሳቁሶችን እና ዘመናዊ የማስተማሪያ አቀራረቦችን ያጠናል።",
+      om: "Maloota barnootaa haaraa kan barsiisa aadaa Orthodoksii fedhii barnootaa ammayyaa waliin walitti fidanu argadhaa. Kutaan kun dhugummaa aadaa amantii keenyaa eegaa, qabeenya dijitaalaa, meeshaalee barnootaa walii galaa, fi mala barnoota ammayyaa qorata.",
+      ti: "ሓደሽቲ ኣገባባት ምምሃር ነቲ ባህላዊ ኦርቶዶክሳዊ ትምህርትታት ምስቲ ዘመናዊ ድሌታት ምምሃር ዘራኽቡ ርኸቡ። እዚ ክፍሊ እዚ ነቲ ሓቅነት ናይ እምነታዊ ባህልታትና እናሓለወ፡ ዲጂታላዊ ጸጋታት፡ ተዋስኦኣዊ ናውቲ መጽናዕትን ዘመናዊ ኣገባባት ምምሃርን የጽንዕ።"
+    },
+    imageUrl: "/images/teachings/new_education.jpg"
   }
 ];
 
 export const churches: Church[] = [
   {
-    id: 1,
-    name: "Rock-Hewn Churches of Lalibela",
-    slug: "lalibela",
-    description: "The 11 medieval monolithic churches carved from rock, a UNESCO World Heritage site and a center of pilgrimage for Ethiopian Orthodox Christians.",
-    longDescription: "The 11 rock-hewn churches of Lalibela were created in the 12th-13th centuries and are carved directly into the rock of the mountains. They were commissioned by King Lalibela, who sought to create a 'New Jerusalem' after Muslim conquests halted Christian pilgrimages to the Holy Land. The most famous is the Church of St. George (Bete Giyorgis), carved in the shape of a cross. These churches are not only religious sites but also remarkable feats of engineering and architecture, all connected by a network of tunnels and trenches.",
-    location: "Lalibela, Amhara Region, Ethiopia",
-    imageUrl: "https://pixabay.com/get/g595c935fafb908babcfd8d47791cb8af63bb0011042105c3cf12e5b87e578f9cce8c56b8bf46c713e70ffdd8145d2bfec018430b50c660e7bc4221fbcefe05e6_1280.jpg",
-    significantFeatures: ["Monolithic construction", "Underground tunnels", "Cross-shaped St. George Church", "Active pilgrimage site", "UNESCO World Heritage"]
+    id: "orthodox-tewahedo",
+    name: "Orthodox Tewahedo Church",
+    description: "The Ethiopian Orthodox Tewahedo Church maintains the ancient Christian tradition of one united nature in Christ.",
+    imageUrl: "/images/churches/tewahedo.jpg",
+    slug: "orthodox-tewahedo",
+    content: {
+      en: "The Ethiopian Orthodox Tewahedo Church emphasizes the united divine and human natures of Christ, maintaining ancient traditions and practices.",
+      am: "የኢትዮጵያ ኦርቶዶክስ ተዋሕዶ ቤተ ክርስቲያን የክርስቶስን አንድ ተዋሕዶአዊ ባሕርይ የምታስተምር ጥንታዊት ቤተ ክርስቲያን ናት።",
+      or: "Waldaa Ortodoksii Tawaahidoo Itoophiyaa barsiisa amantii Kiristoos baay'ina tokko qabu barsiisa.",
+      ti: "ቤተ ክርስትያን ኦርቶዶክስ ተዋሕዶ ኢትዮጵያ ሓደ ተዋሕዶኣዊ ባሕርይ ክርስቶስ እትምህር ጥንታዊት ቤተ ክርስትያን እያ።"
+    }
   },
   {
-    id: 2,
-    name: "Holy Trinity Cathedral",
-    slug: "holy-trinity-cathedral",
-    description: "The highest-ranking Ethiopian Orthodox cathedral in Addis Ababa, known for its distinctive architecture and as the final resting place of Emperor Haile Selassie.",
-    longDescription: "Holy Trinity Cathedral (known locally as Kidist Selassie) was built to commemorate Ethiopia's liberation from Italian occupation and was completed in 1942. It features a unique blend of Ethiopian and European architectural styles with large stained glass windows depicting biblical scenes and Ethiopian history. The cathedral serves as the final resting place of Emperor Haile Selassie and his wife Empress Menen Asfaw, as well as other notable figures in Ethiopian history. As the seat of the Archbishop of the Ethiopian Orthodox Church, it's a major center for religious ceremonies and celebrations.",
-    location: "Addis Ababa, Ethiopia",
-    imageUrl: "https://pixabay.com/get/g8cfc96689d6a07145ace5f10dafd9cfde68e39498ab06195053235276622f5094dc7f73f3a938bb1a62d5539d3e99d8b6992d3e74f0527e50f98e681d65520e2_1280.jpg",
-    significantFeatures: ["Final resting place of Emperor Haile Selassie", "Stained glass artwork", "Fusion of Ethiopian and European styles", "National importance", "Active cathedral"]
-  },
-  {
-    id: 3,
-    name: "Debre Damo Monastery",
-    slug: "debre-damo",
-    description: "An ancient monastery located on a flat-topped mountain, accessible only by climbing a leather rope, housing some of Ethiopia's oldest religious manuscripts.",
-    longDescription: "Debre Damo is one of Ethiopia's most important monasteries, dating back to the 6th century. It sits atop a flat-topped mountain (amba) and is famously accessible only by climbing a 15-meter leather rope, which women and female animals are forbidden to ascend. The monastery contains the oldest existing church building in Ethiopia, constructed in the Aksumite architectural style with layers of wood and stone. It houses a significant collection of ancient manuscripts and is still home to a community of monks who maintain traditional practices. The isolation of the monastery has helped preserve many ancient religious texts and traditions.",
-    location: "Tigray Region, Ethiopia",
-    imageUrl: "https://pixabay.com/get/ge50ce01ac7c0e7b7e57a49b12f6dac78ea9c1dc1657ceca28dd9cae87fbfc85ded6c6fb29d0df58d24af1fb93dee3dad558ed9c7461d979d5f50b5cd9fe7b2c8_1280.jpg",
-    significantFeatures: ["Accessible only by rope", "6th century origins", "Aksumite architecture", "Ancient manuscripts", "Monastic community"]
-  },
-  {
-    id: 4,
-    name: "Monastery of Debre Libanos",
-    slug: "debre-libanos",
-    description: "An important monastery founded in the 13th century by Saint Tekle Haymanot, one of Ethiopia's most revered saints.",
-    longDescription: "Debre Libanos was founded in the 13th century by Saint Tekle Haymanot, who is said to have prayed for 29 years standing on one leg until the other withered and fell off. The current church was built by Emperor Haile Selassie in 1961, replacing a structure from the 1950s. The monastery is a major pilgrimage site, particularly during the feast of Saint Tekle Haymanot. Nearby is a sacred spring believed to have healing properties and a cave where Saint Tekle Haymanot is said to have lived as a hermit. The site was also the location of a massacre in 1937 during the Italian occupation, when hundreds of monks and other Ethiopians were killed.",
-    location: "Oromia Region, Ethiopia",
-    imageUrl: "https://pixabay.com/get/gbad2f3faea10d9a12e7df5feb0d8a9c9cf34c80f0f9ba2e55fb76cbbf10a2ac5e1d0ab452d6e1c02eb0a7c06a631f0b38ca9b0f35d3c7602c3c0e70feb4cac5f_1280.jpg",
-    significantFeatures: ["Associated with St. Tekle Haymanot", "Sacred spring", "Beautiful landscape", "Site of historical massacre", "Active pilgrimage center"]
+    id: "greek-orthodox",
+    name: "Greek Orthodox Tradition",
+    description: "The Greek Orthodox tradition maintains the teaching of two natures in Christ while preserving ancient liturgical practices.",
+    imageUrl: "/images/churches/greek-orthodox.jpg",
+    slug: "greek-orthodox",
+    content: {
+      en: "The Greek Orthodox Church maintains the doctrine of two natures in Christ while sharing many ancient traditions with other Orthodox churches.",
+      am: "የግሪክ ኦርቶዶክስ ቤተ ክርስቲያን ለክርስቶስ ሁለት ባሕርያት እንዳሉት የምታስተምር ሲሆን ጥንታዊ ወግን ታስጠብቃለች።",
+      or: "Waldaan Ortodoksii Giriikii amantaa Kiristoos baay'ina lama qabu barsiifti.",
+      ti: "ቤተ ክርስትያን ግሪኽ ኦርቶዶክስ ክልተ ባሕርያት ክርስቶስ እትምህር እያ።"
+    }
   }
 ];
 
 export const traditions: Tradition[] = [
   {
+    id: "liturgical",
+    name: "Liturgical Traditions",
+    description: "Ancient liturgical practices including the Divine Liturgy of St. Mary and the various anaphoras.",
+    icon: "🕊️",
+    content: {
+      en: "The Ethiopian Orthodox Church preserves ancient liturgical traditions, including various anaphoras and the Divine Liturgy.",
+      am: "የኢትዮጵያ ኦርቶዶክስ ቤተ ክርስቲያን የቅዱስ ቁርባን አከባበርን ጨምሮ ጥንታዊ የአምልኮ ሥርዓቶችን ጠብቃ ታቆያለች።",
+      or: "Waldaan Ortodoksii Itoophiyaa aadaa amantii durii of keessaa qabu kunuunsa.",
+      ti: "ቤተ ክርስትያን ኦርቶዶክስ ኢትዮጵያ ጥንታዊ ስርዓተ ኣምልኾ ትሕልው።"
+    }
+  },
+  {
+    id: "sacraments",
+    name: "Seven Sacraments",
+    description: "The seven holy sacraments that form the foundation of Orthodox spiritual life.",
+    icon: "✝️",
+    content: {
+      en: "The seven sacraments include Baptism, Confirmation, Holy Communion, Confession, Holy Orders, Matrimony, and Anointing of the Sick.",
+      am: "ሰባቱ ምስጢራተ ቤተ ክርስቲያን፡ ጥምቀት፣ ሜሮን፣ ቁርባን፣ ንስሐ፣ ክህነት፣ ተክሊል እና ቀንዲል ናቸው።",
+      or: "Iccitiiwwan Waldaa torba: Cuuphaa, Dibata, Qurbaana, Gabbii, Lubummaa, Fuudhaa fi Heeruma, fi Dibata Dhukkubsatootaa dha.",
+      ti: "ሸውዓተ ምስጢራት ቤተ ክርስትያን፡ ጥምቀት፣ ሜሮን፣ ቁርባን፣ ንስሓ፣ ክህነት፣ ተክሊልን ቀንዲልን እዮም።"
+    }
+  }
+];
+
+export const prayers: Prayer[] = [
+  {
     id: 1,
-    name: "Meskel Festival",
-    description: "An annual religious holiday commemorating the finding of the True Cross. Celebrated with the burning of a large bonfire called Damera and accompanied by singing and dancing.",
-    history: "Meskel has been celebrated in Ethiopia for over 1,600 years. According to tradition, Queen Helena (mother of Emperor Constantine the Great) discovered the True Cross in the 4th century after following the smoke from a burning bonfire. The festival symbolizes the revelation of the True Cross and is celebrated on September 27 (or September 28 in leap years).",
-    significance: "Meskel marks the finding of the True Cross on which Jesus Christ was crucified. The bonfire symbolizes the smoke that guided Queen Helena. The festival also coincides with the end of the rainy season in Ethiopia and the blooming of Meskel daisies (yellow flowers).",
-    icon: "🔥"
+    title: {
+      en: "Morning Prayer (Tselote Negih)",
+      am: "ጸሎተ ነግህ",
+      om: "Kadhannaa Ganamaa",
+      ti: "ጸሎት ንግሆ"
+    },
+    originalTitle: "ጸሎተ ነግህ",
+    slug: "morning-prayer",
+    description: {
+      en: "The first prayer of the day at 6 AM, commemorating Adam's creation and Christ's future coming for judgment.",
+      am: "የቀኑ የመጀመሪያ ጸሎት በጠዋት 6 ሰዓት፣ የአዳምን ፍጥረትና ክርስቶስ ለፍርድ የሚመጣበትን የሚያስታውስ።",
+      om: "Kadhannaa jalqabaa guyyaa sa'a 6 ganama, uumama Addaamii fi dhufaatii Kiristoos firdiitiif yaadachiisu.",
+      ti: "ናይ መዓልቲ ቀዳማይ ጸሎት ሰዓት 6 ንጉሆ፡ ምፍጣር ኣዳምን መጽኢ ፍርዲ ክርስቶስን ዘዘኻኽር።"
+    },
+    content: {
+      time: "6:00 AM",
+      significance: {
+        en: [
+          "Time when Adam was created",
+          "Hour when Christ will come for judgment",
+          "We thank God for protecting us through the night",
+          "Time to remember Christ standing in judgment for our sake"
+        ],
+        am: [
+          "አዳም የተፈጠረበት ሰዓት",
+          "ክርስቶስ ለፍርድ የሚመጣበት ሰዓት",
+          "በሌሊት ስለጠበቀን እግዚአብሔርን እናመሰግናለን",
+          "ክርስቶስ ስለእኛ በፍርድ ቤት መቆሙን የምናስታውስበት"
+        ],
+        om: [
+          "Yeroo Addaam itti uumame",
+          "Sa'atii Kiristoos firdiitiif itti dhufu",
+          "Halkan nu eeguu isaatiif Waaqa galateeffanna",
+          "Yeroo Kiristoos nuuf jedhee firdii dura dhaabbate yaadannu"
+        ],
+        ti: [
+          "ግዜ ምፍጣር ኣዳም",
+          "ሰዓት ምምጻእ ክርስቶስ ንፍርዲ",
+          "ንምሕላው ኣምላኽ ኣብ ለይቲ ነመስግን",
+          "ግዜ ምዝካር ክርስቶስ ኣብ ቤት ፍርዲ ብዛዕባና ደው ምባሉ"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   },
   {
     id: 2,
-    name: "Timket (Epiphany)",
-    description: "A celebration of the baptism of Jesus Christ in the Jordan River. Tabots (replicas of the Ark of the Covenant) are carried in procession to a body of water where the blessing takes place.",
-    history: "Timket has been celebrated in Ethiopia since the adoption of Christianity as the state religion in the 4th century. It is the Ethiopian celebration of Epiphany, commemorating the baptism of Jesus in the Jordan River.",
-    significance: "Timket is one of the most colorful Ethiopian festivals. The most important part is the removal of the church tabots from each church and their procession to a water source. The tabots stay overnight, then the blessing of the water and symbolic baptismal renewal occurs the next morning. The tabots then return to their churches in colorful procession.",
-    icon: "💧"
+    title: {
+      en: "Third Hour Prayer (Tselote Selest)",
+      am: "ጸሎተ ሠለስት",
+      om: "Kadhannaa Sa'aatii Sadaffaa",
+      ti: "ጸሎት ሰለስተ"
+    },
+    originalTitle: "ጸሎተ ሠለስት",
+    slug: "third-hour-prayer",
+    description: {
+      en: "Prayer at 9 AM, commemorating Christ's journey to Calvary and the descent of the Holy Spirit.",
+      am: "በጠዋት 9 ሰዓት የሚደረግ፣ ክርስቶስ ወደ ቀራንዮ የጀመረበትንና መንፈስ ቅዱስ የወረደበትን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 9 ganama, imala Kiristoos gara Qaraaniyootti fi bu'iinsa Hafuura Qulqulluu yaadachiisu.",
+      ti: "ጸሎት ሰዓት 9 ንጉሆ፡ ጉዕዞ ክርስቶስ ናብ ቀራንዮን ምውራድ መንፈስ ቅዱስን ዘዘኻኽር።"
+    },
+    content: {
+      time: "9:00 AM",
+      significance: {
+        en: [
+          "Beginning of Christ's journey to Calvary",
+          "Annunciation to Virgin Mary by Gabriel",
+          "Descent of the Holy Spirit on the 120 faithful"
+        ],
+        am: [
+          "ክርስቶስ ወደ ቀራንዮ መጓዙ የተጀመረበት",
+          "ገብርኤል ለድንግል ማርያም ያበሰረበት",
+          "መንፈስ ቅዱስ በ120 ምእመናን ላይ የወረደበት"
+        ],
+        om: [
+          "Jalqabbii imala Kiristoos gara Qaraaniyootti",
+          "Gabri'eel Durbee Maariyaamiif beeksisuu",
+          "Bu'iinsa Hafuura Qulqulluu amanttoota 120 irra"
+        ],
+        ti: [
+          "መጀመርታ ጉዕዞ ክርስቶስ ናብ ቀራንዮ",
+          "ምብሳር ገብርኤል ንድንግል ማርያም",
+          "ምውራድ መንፈስ ቅዱስ ኣብ 120 ምእመናን"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   },
   {
     id: 3,
-    name: "Fasting Traditions",
-    description: "Ethiopian Orthodox followers observe over 250 fasting days per year, including the 55-day Lent fast (Hudade), abstaining from animal products and eating after 3pm.",
-    history: "Fasting has been a central practice in Ethiopian Orthodox Christianity from its inception. The practice is rooted in biblical precedents and the early Christian church, but the Ethiopian Orthodox Church has developed particularly extensive fasting periods.",
-    significance: "Fasting is considered essential for spiritual growth and purification. During fasts, believers abstain from animal products (becoming effectively vegan) and often don't eat or drink until a certain time of day. Major fasting periods include the 55-day Great Lent (Hudade), the Fast of the Prophets, the Assumption Fast, and Wednesday and Friday weekly fasts.",
-    icon: "🍽️"
+    title: {
+      en: "Sixth Hour Prayer (Tselote Sidist)",
+      am: "ጸሎተ ስድስት",
+      om: "Kadhannaa Sa'aatii Jahaffaa",
+      ti: "ጸሎት ሽዱሽተ"
+    },
+    originalTitle: "ጸሎተ ስድስት",
+    slug: "sixth-hour-prayer",
+    description: {
+      en: "Midday prayer at 12 PM, commemorating Christ's crucifixion on the Cross.",
+      am: "በቀትር 12 ሰዓት፣ ክርስቶስ በመስቀል የተሰቀለበትን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa guyyaa walakkaa sa'a 12, fannifamuu Kiristoos yaadachiisu.",
+      ti: "ጸሎት ሰዓት 12 ቀትሪ፡ ምስቃል ክርስቶስ ኣብ መስቀል ዘዘኻኽር።"
+    },
+    content: {
+      time: "12:00 PM",
+      significance: {
+        en: [
+          "Hour of Christ's crucifixion",
+          "Time when darkness covered the earth",
+          "When the serpent tempted Adam and Eve"
+        ],
+        am: [
+          "ክርስቶስ የተሰቀለበት ሰዓት",
+          "ጨለማ ምድርን የሸፈነበት ጊዜ",
+          "እባብ አዳምንና ሔዋንን ያታለለበት"
+        ],
+        om: [
+          "Sa'atii fannifamuu Kiristoos",
+          "Yeroo dukkanni lafaa uwwise",
+          "Yeroo bosonni Addaam fi Hewaan qore"
+        ],
+        ti: [
+          "ሰዓት ምስቃል ክርስቶስ",
+          "ግዜ ጸልማት ምድሪ ዝሸፈነ",
+          "ተመን ንኣዳምን ሄዋንን ዝፈተነሉ"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1504256624605-ff6e9d50bdc4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   },
   {
     id: 4,
-    name: "Liturgical Music",
-    description: "Ethiopian Orthodox liturgical music features unique chanting styles accompanied by traditional instruments such as the sistrum (senasel), drums (kebero), and prayer sticks (mequamia).",
-    history: "The musical tradition of the Ethiopian Orthodox Church dates back to Saint Yared in the 6th century, who is credited with creating the sacred music notation system called mekwamia. According to tradition, Saint Yared received the inspiration for the church music from God through three birds.",
-    significance: "Ethiopian liturgical music is unique in its use of specific instruments like the sistrum (senasel), prayer staff (mequamia), and drums (kebero). The chanting follows specific modes, or scales, associated with different seasons and occasions. The chants are performed by trained church musicians and are an integral part of the lengthy liturgical services.",
-    icon: "🎵"
+    title: {
+      en: "Ninth Hour Prayer (Tselote Tesa'at)",
+      am: "ጸሎተ ተሰዓት",
+      om: "Kadhannaa Sa'aatii Saglaffaa",
+      ti: "ጸሎት ትሽዓተ"
+    },
+    originalTitle: "ጸሎተ ተሰዓት",
+    slug: "ninth-hour-prayer",
+    description: {
+      en: "Afternoon prayer at 3 PM, commemorating Christ's death on the Cross and the miracles that occurred.",
+      am: "በከሰዓት 3 ሰዓት፣ ክርስቶስ በመስቀል ላይ የሞተበትንና የተከሰቱትን ተአምራት የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 3 waaree booda, du'a Kiristoos fannoo irratti fi dinqiiwwan raawwataman yaadachiisu.",
+      ti: "ጸሎት ሰዓት 3 ድሕሪ ቀትሪ፡ ሞት ክርስቶስ ኣብ መስቀልን ተኣምራት ዝተፈጸሙን ዘዘኻኽር።"
+    },
+    content: {
+      time: "3:00 PM",
+      significance: {
+        en: [
+          "Hour when Christ gave up His spirit",
+          "When miracles occurred at His death",
+          "Time to remember His death and the gift of life"
+        ],
+        am: [
+          "ክርስቶስ መንፈሱን የሰጠበት ሰዓት",
+          "በሞቱ ጊዜ ተአምራት የተከሰተበት",
+          "ሞቱንና የሕይወት ስጦታውን የምናስታውስበት"
+        ],
+        om: [
+          "Sa'atii Kiristoos hafuura isaa kenneef",
+          "Yeroo du'a isaa dinqiiwwan raawwataman",
+          "Yeroo du'a isaa fi kennaa jireenya yaadannu"
+        ],
+        ti: [
+          "ሰዓት ክርስቶስ መንፈሱ ዝሃበሉ",
+          "ኣብ ግዜ ሞቱ ተኣምራት ዝተፈጸመሉ",
+          "ግዜ ምዝካር ሞቱን ውህበት ህይወትን"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1501139083538-0139583c060f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   },
   {
     id: 5,
-    name: "Tabot Procession",
-    description: "The ceremonial procession of the tabot (replica of the Ark of the Covenant), which is the centerpiece of church consecrations and major festivals.",
-    history: "The tradition of the tabot is linked to Ethiopia's claim to house the original Ark of the Covenant, believed to have been brought to Ethiopia by Menelik I, son of King Solomon and the Queen of Sheba. Each church contains a consecrated tabot, a replica of the Ark.",
-    significance: "The tabot is the most sacred object in the Ethiopian Orthodox tradition. Normally kept in the Holy of Holies (mekdes) of the church, the tabot is brought out in solemn procession during major festivals like Timket. Only ordained priests may touch the tabot, and it is usually covered with rich cloths when in procession. The presence of a tabot consecrates a church building.",
-    icon: "🏺"
+    title: {
+      en: "Evening Prayer (Tselote Serk)",
+      am: "ጸሎተ ሠርክ",
+      om: "Kadhannaa Serk",
+      ti: "ጸሎት ሰርክ"
+    },
+    originalTitle: "ጸሎተ ሠርክ",
+    slug: "evening-prayer",
+    description: {
+      en: "Evening prayer at 5 PM, commemorating Christ's removal from the Cross and His descent into Sheol.",
+      am: "በምሽት 5 ሰዓት፣ ክርስቶስ ከመስቀል መውረዱንና ወደ ሲኦል መውረዱን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 5 galgalaa, buufamuu Kiristoos fannoo irraa fi gadi bu'uu isaa gara Si'ool yaadachiisu.",
+      ti: "ጸሎት ሰዓት 5 ምሸት፡ ምውራድ ክርስቶስ ካብ መስቀልን ምውራዱ ናብ ሲኦልን ዘዘኻኽር።"
+    },
+    content: {
+      time: "5:00 PM",
+      significance: {
+        en: [
+          "Time when Christ's body was taken down",
+          "When He descended to Sheol",
+          "We remember His burial"
+        ],
+        am: [
+          "ክርስቶስ ከመስቀል የወረደበት ሰዓት",
+          "ወደ ሲኦል የወረደበት",
+          "መቃብር ማደሩን የምናስታውስበት"
+        ],
+        om: [
+          "Yeroo qaamni Kiristoos fannoo irraa buufame",
+          "Yeroo gara Si'ool bu'e",
+          "Awwaala isaa yaadanna"
+        ],
+        ti: [
+          "ሰዓት ሬሳ ክርስቶስ ካብ መስቀል ዝወረደሉ",
+          "ናብ ሲኦል ዝወረደሉ",
+          "ምቕባሩ እንዝክረሉ"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1472068113808-609faf3a6cf1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   },
   {
     id: 6,
-    name: "Ethiopian Cross Tradition",
-    description: "The crafting and veneration of distinctive Ethiopian crosses, which feature intricate lattice work and unique designs that vary by region.",
-    history: "The Ethiopian cross tradition developed after Christianity became the state religion in the 4th century. Over centuries, distinctive styles emerged in different regions, with various symbolic patterns and designs.",
-    significance: "Ethiopian crosses are not just religious symbols but also works of art. They typically feature intricate lattice work and patterns that often include symbolic references to biblical stories or aspects of Ethiopian Orthodox theology. Hand crosses are used by priests for blessing, processional crosses for ceremonies, and pendant crosses are worn by the faithful. The cross designs often incorporate circles, representing eternity and God's unending love.",
-    icon: "✝️"
+    title: {
+      en: "Night Prayer (Tselote Niwam)",
+      am: "ጸሎተ ንዋም",
+      om: "Kadhannaa Niwam",
+      ti: "ጸሎት ንዋም"
+    },
+    originalTitle: "ጸሎተ ንዋም",
+    slug: "night-prayer",
+    description: {
+      en: "Night prayer at 9 PM, commemorating Christ's prayer in Gethsemane and His arrest.",
+      am: "በምሽት 9 ሰዓት፣ ክርስቶስ በጌቴሴማኒ የጸለየበትንና የተያዘበትን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 9 galgalaa, kadhannaa Kiristoos Getsemaanii keessatti fi qabamuu isaa yaadachiisu.",
+      ti: "ጸሎት ሰዓት 9 ምሸት፡ ጸሎት ክርስቶስ ኣብ ጌትሰማኒን ምትሓዙን ዘዘኻኽር።"
+    },
+    content: {
+      time: "9:00 PM",
+      significance: {
+        en: [
+          "Time of Christ's prayer in Gethsemane",
+          "When He taught the Apostles to pray",
+          "When He was arrested"
+        ],
+        am: [
+          "ክርስቶስ በጌቴሴማኒ የጸለየበት ሰዓት",
+          "ሐዋርያትን ጸሎት ያስተማረበት",
+          "የተያዘበት ጊዜ"
+        ],
+        om: [
+          "Yeroo Kiristoos Getsemaanii keessatti kadhate",
+          "Yeroo Ergamoota kadhachuu barsiise",
+          "Yeroo qabame"
+        ],
+        ti: [
+          "ግዜ ጸሎት ክርስቶስ ኣብ ጌትሰማኒ",
+          "ንሃዋርያት ጸሎት ዝመሃረሉ",
+          "ዝተታሕዘሉ ግዜ"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+  },
+  {
+    id: 7,
+    title: {
+      en: "Midnight Prayer (Tselote Menfeke Leliet)",
+      am: "ጸሎተ መንፈቀ ሌሊት",
+      om: "Kadhannaa Walakkaa Halkanii",
+      ti: "ጸሎት መንፈቀ ለይቲ"
+    },
+    originalTitle: "ጸሎተ መንፈቀ ሌሊት",
+    slug: "midnight-prayer",
+    description: {
+      en: "Midnight prayer at 12 AM, commemorating Christ's resurrection while the tomb was sealed.",
+      am: "በሌሊት 12 ሰዓት፣ ክርስቶስ መቃብሩ ተዘግቶ እንዳለ የተነሳበትን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa sa'a 12 halkan walakkaa, du'aa ka'uu Kiristoos yeroo awwaalli isaa cufaa ture yaadachiisu.",
+      ti: "ጸሎት ሰዓት 12 ለይቲ፡ ትንሳኤ ክርስቶስ እንከሎ መቓብሩ ዕጹው ዘዘኻኽር።"
+    },
+    content: {
+      time: "12:00 AM",
+      significance: {
+        en: [
+          "Time of Christ's resurrection",
+          "When He conquered death while the tomb was sealed",
+          "Confirmation of our own resurrection"
+        ],
+        am: [
+          "ክርስቶስ የተነሳበት ሰዓት",
+          "መቃብሩ ተዘግቶ እያለ ሞትን የሸነፈበት",
+          "የእኛን ትንሣኤ ያረጋገጠበት"
+        ],
+        om: [
+          "Yeroo Kiristoos du'aa ka'e",
+          "Yeroo awwaalli cufaa osoo jiruu du'a mo'e",
+          "Du'aa ka'uu keenya mirkaneesse"
+        ],
+        ti: [
+          "ሰዓት ትንሳኤ ክርስቶስ",
+          "መቓብሩ ዕጹው እንከሎ ሞት ዝሰዓረሉ",
+          "ትንሳኤና ዘረጋገጸሉ"
+        ]
+      }
+    },
+    category: {
+      en: "Daily Prayer",
+      am: "የዕለት ጸሎት",
+      om: "Kadhannaa Guyyaa",
+      ti: "ዕለታዊ ጸሎት"
+    },
+    imageUrl: "https://images.unsplash.com/photo-1532767153582-b1a0e5145009?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
   }
 ];

@@ -1,38 +1,32 @@
-import { churches, traditions } from "@/lib/data";
+import { churches, traditions, getChurchesByLanguage, getTraditionsByLanguage } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
 import { PatternBorder } from "@/components/ui/pattern-border";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Helmet } from 'react-helmet';
+import { useLanguage } from "@/lib/LanguageContext";
+import { ReactNode } from "react";
 
 const DecorativeDivider = () => (
   <div className="flex items-center justify-center mb-12">
     <div className="h-px bg-gold w-24"></div>
-    <div className="mx-4 text-gold">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-xl">
-        <path d="M12 2l2 4h3l-2.5 3 1 4-3.5-2-3.5 2 1-4L7 6h3z"/>
-        <path d="M12 14v8"/>
-      </svg>
-    </div>
+    <div className="mx-4 text-gold">✝️</div>
     <div className="h-px bg-gold w-24"></div>
   </div>
 );
 
-const ChurchCard = ({ 
-  name, 
-  description, 
-  image, 
-  slug 
-}: { 
-  name: string; 
-  description: string; 
-  image: string; 
+interface ChurchCardProps {
+  name: ReactNode;
+  description: ReactNode;
+  image: string;
   slug: string;
-}) => (
+}
+
+const ChurchCard = ({ name, description, image, slug }: ChurchCardProps) => (
   <div className="bg-white rounded-lg overflow-hidden shadow-md mb-6 hover:shadow-lg transition duration-300">
     <div className="h-64 overflow-hidden">
       <img 
         src={image} 
-        alt={name} 
+        alt={typeof name === 'string' ? name : 'Church image'} 
         className="w-full h-full object-cover"
       />
     </div>
@@ -46,54 +40,55 @@ const ChurchCard = ({
   </div>
 );
 
-const TraditionItem = ({ 
-  name, 
-  description, 
-  icon 
-}: { 
-  name: string; 
-  description: string; 
+interface TraditionItemProps {
+  name: ReactNode;
+  description: ReactNode;
   icon: string;
-}) => (
-  <div className="bg-white p-6 rounded-lg shadow-md">
+}
+
+const TraditionItem = ({ name, description, icon }: TraditionItemProps) => (
+  <div className="bg-white p-6 rounded-lg shadow-md mb-4">
     <div className="flex items-center mb-4">
       <div className="bg-burgundy w-10 h-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
         <span className="text-gold">{icon}</span>
       </div>
       <h4 className="font-heading text-xl text-burgundy">{name}</h4>
     </div>
-    <p className="text-gray-700 mb-3">{description}</p>
-    <a href="#" className="text-darkblue font-semibold hover:text-burgundy transition">Read More</a>
+    <p className="text-gray-700">{description}</p>
   </div>
 );
 
 const Churches = () => {
+  const { language } = useLanguage();
+  const localizedChurches = getChurchesByLanguage(language);
+  const localizedTraditions = getTraditionsByLanguage(language);
+
   return (
     <>
       <Helmet>
-        <title>Churches & Traditions | Ethiopian Orthodox Portal</title>
-        <meta name="description" content="Explore iconic Ethiopian Orthodox churches and sacred traditions, from rock-hewn churches to festivals, liturgical music, and fasting practices." />
+        <title>Maatiwwaan M/Q/Gabra-Kiristoos | Ethiopian Orthodox Hub</title>
+        <meta name="description" content="Discover the rich theological traditions, doctrinal teachings, and sacred practices of the Ethiopian Orthodox Tewahedo Church." />
       </Helmet>
       <div className="py-16 min-h-screen">
         <div className="container mx-auto px-6">
-          <h1 className="text-4xl md:text-5xl font-heading text-burgundy text-center mb-2">Churches & Traditions</h1>
-          <p className="text-center text-gray-600 mb-8">Sacred spaces and cultural heritage</p>
+          <h3 className="text-3xl md:text-4xl font-heading text-burgundy text-center mb-2">Maatiwwaan M/Q/Gabra-Kiristoos</h3>
+          <p className="text-center text-gray-700 mb-8">Jaalalaa Afuura fi Obbolummaa Dhugaa</p>
           
           <DecorativeDivider />
           
           <Tabs defaultValue="churches" className="max-w-5xl mx-auto">
             <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="churches" className="text-lg">Iconic Churches</TabsTrigger>
+              <TabsTrigger value="churches" className="text-lg">Doctrinal Teachings</TabsTrigger>
               <TabsTrigger value="traditions" className="text-lg">Sacred Traditions</TabsTrigger>
             </TabsList>
             
             <TabsContent value="churches" className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {churches.map((church) => (
+                {localizedChurches.map((church) => (
                   <ChurchCard 
                     key={church.id}
-                    name={church.name}
-                    description={church.description}
+                    name={church.name as unknown as ReactNode}
+                    description={church.description as unknown as ReactNode}
                     image={church.imageUrl}
                     slug={church.slug}
                   />
@@ -101,40 +96,41 @@ const Churches = () => {
               </div>
               
               <div className="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-200 mt-12">
-                <h2 className="text-2xl font-heading text-burgundy mb-4">Church Architecture</h2>
+                <h2 className="text-xl font-heading text-burgundy mb-4">The Seven Sacraments</h2>
                 <PatternBorder className="mb-6" />
                 <p className="text-gray-700 mb-4">
-                  Ethiopian Orthodox church architecture is distinctive, often featuring three concentric circular or octagonal sections:
+                  The Ethiopian Orthodox Church recognizes seven holy sacraments (mysteries) that form the foundation of spiritual life:
                 </p>
                 <ul className="list-disc pl-6 space-y-2 text-gray-700 mb-4">
-                  <li><strong>Qene Mahlet</strong> (outer section): Where the choir sings.</li>
-                  <li><strong>Kiddist</strong> (middle section): Where the congregation stands for the liturgy.</li>
-                  <li><strong>Mekdes</strong> (inner sanctum): Housing the tabot (replica of the Ark of the Covenant), accessible only to priests.</li>
+                  <li><strong>Baptism</strong> (ጥምቀት) - The gateway to Christian life</li>
+                  <li><strong>Confirmation</strong> (ሜሮን) - The seal of the Holy Spirit</li>
+                  <li><strong>Holy Communion</strong> (ቁርባን) - The body and blood of Christ</li>
+                  <li><strong>Confession</strong> (ንስሐ) - The sacrament of reconciliation</li>
+                  <li><strong>Holy Orders</strong> (ክህነት) - The sacrament of priesthood</li>
+                  <li><strong>Matrimony</strong> (ተክሊል) - The sacred union of marriage</li>
+                  <li><strong>Anointing of the Sick</strong> (ቀንዲል) - Healing of body and soul</li>
                 </ul>
-                <p className="text-gray-700">
-                  Churches are traditionally oriented east-west, with the sanctuary in the east. The interiors are often decorated with colorful religious paintings depicting biblical scenes and Ethiopian Orthodox saints.
-                </p>
               </div>
             </TabsContent>
             
             <TabsContent value="traditions" className="space-y-6">
-              {traditions.map((tradition) => (
+              {localizedTraditions.map((tradition) => (
                 <TraditionItem 
                   key={tradition.id}
-                  name={tradition.name}
-                  description={tradition.description}
+                  name={tradition.name as unknown as ReactNode}
+                  description={tradition.description as unknown as ReactNode}
                   icon={tradition.icon}
                 />
               ))}
               
               <div className="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-200 mt-8">
-                <h2 className="text-2xl font-heading text-burgundy mb-4">The Importance of Tradition</h2>
+                <h2 className="text-2xl font-heading text-burgundy mb-4">Living Faith</h2>
                 <PatternBorder className="mb-6" />
                 <p className="text-gray-700">
-                  Traditions in the Ethiopian Orthodox Church are not merely cultural practices but are considered integral to the faith itself. They embody centuries of spiritual wisdom and connect believers to the apostolic origins of Christianity in Ethiopia, traditionally attributed to the conversion of the Ethiopian eunuch by Philip the Evangelist (Acts 8:26-40) and later to the missionary work of Frumentius in the 4th century.
+                  The Ethiopian Orthodox Tewahedo Church preserves ancient apostolic traditions and practices that have shaped Ethiopian Christianity for nearly two millennia. These include extensive fasting periods, unique liturgical music, distinctive cross traditions, and the veneration of the Ark of the Covenant (Tabot).
                 </p>
                 <p className="text-gray-700 mt-4">
-                  These sacred traditions have been carefully preserved even through periods of hardship and persecution, serving as a testament to the resilience and devotion of Ethiopian Orthodox believers throughout history.
+                  The Church maintains its distinctive theological position on the nature of Christ (Tewahedo), emphasizing the perfect union of His divine and human natures, while preserving ancient liturgical practices in the Ge'ez language.
                 </p>
               </div>
             </TabsContent>

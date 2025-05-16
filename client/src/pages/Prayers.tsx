@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { prayers, PrayerCategory } from "@/lib/data";
-import { PatternBorder } from "@/components/ui/pattern-border";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { prayers, PrayerCategory, getPrayersByLanguage, getPrayerCategoriesByLanguage } from "@/lib/data";
+import { useLanguage } from "@/lib/LanguageContext";
 import { Helmet } from 'react-helmet';
+import { PatternBorder } from "@/components/ui/pattern-border";
+import { Prayer } from "@/lib/types";
 
 const DecorativeDivider = () => (
   <div className="flex items-center justify-center mb-12">
@@ -40,24 +42,24 @@ const CategoryButton = ({
 );
 
 const PrayerCard = ({ 
-  title, 
-  originalTitle, 
-  description, 
-  image, 
+  title,
+  originalTitle,
+  description,
   category,
+  imageUrl,
   slug
 }: { 
-  title: string; 
-  originalTitle: string; 
-  description: string; 
-  image: string; 
-  category: PrayerCategory;
+  title: string;
+  originalTitle: string;
+  description: string;
+  category: string;
+  imageUrl: string;
   slug: string;
 }) => (
   <div className="prayer-card relative bg-white rounded-lg overflow-hidden shadow-md group">
     <div className="h-48 overflow-hidden">
       <img 
-        src={image} 
+        src={imageUrl} 
         alt={title} 
         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
@@ -71,7 +73,7 @@ const PrayerCard = ({
     </div>
     <div className="p-6">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="font-heading text-xl text-burgundy">{originalTitle}</h3>
+        <h3 className="font-heading text-xl text-burgundy">{title}</h3>
         <span className="text-xs bg-gold bg-opacity-20 text-burgundy px-2 py-1 rounded-full">
           {category}
         </span>
@@ -82,26 +84,35 @@ const PrayerCard = ({
 );
 
 const Prayers = () => {
-  const [activeCategory, setActiveCategory] = useState<PrayerCategory | "All">("All");
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const { t, language } = useLanguage();
+  
+  // Get prayers and categories using our helper functions
+  const localizedPrayers = getPrayersByLanguage(language);
+  const availableCategories = getPrayerCategoriesByLanguage(language);
   
   // Get all unique categories
-  const categories: (PrayerCategory | "All")[] = ["All", ...new Set(prayers.map(prayer => prayer.category))];
+  const categories = ["All", ...availableCategories];
   
   // Filter prayers by active category
   const filteredPrayers = activeCategory === "All" 
-    ? prayers 
-    : prayers.filter(prayer => prayer.category === activeCategory);
+    ? localizedPrayers 
+    : localizedPrayers.filter(prayer => prayer.category === activeCategory);
 
   return (
     <>
       <Helmet>
-        <title>Prayers & Hymns | Ethiopian Orthodox Portal</title>
-        <meta name="description" content="Discover traditional Ethiopian Orthodox prayers, hymns, and liturgical texts to enrich your spiritual practice and deepen your devotion." />
+        <title>{t('prayersSection', 'title')} | Ethiopian Orthodox Portal</title>
+        <meta name="description" content={t('prayersSection', 'subtitle')} />
       </Helmet>
-      <div className="py-16 min-h-screen">
+      <div className="min-h-screen bg-gray-50 py-16">
         <div className="container mx-auto px-6">
-          <h1 className="text-4xl md:text-5xl font-heading text-burgundy text-center mb-2">Prayers & Hymns</h1>
-          <p className="text-center text-gray-600 mb-8">Sacred texts for devotion and worship</p>
+          <h1 className="text-4xl md:text-5xl font-heading text-burgundy text-center mb-4">
+            {t('prayersSection', 'title')}
+          </h1>
+          <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
+            {t('prayersSection', 'subtitle')}
+          </p>
           
           <DecorativeDivider />
           
@@ -125,8 +136,8 @@ const Prayers = () => {
                 title={prayer.title}
                 originalTitle={prayer.originalTitle}
                 description={prayer.description}
-                image={prayer.imageUrl}
                 category={prayer.category}
+                imageUrl={prayer.imageUrl}
                 slug={prayer.slug}
               />
             ))}
@@ -134,21 +145,23 @@ const Prayers = () => {
           
           {/* Prayer Practice Guidelines */}
           <div className="max-w-4xl mx-auto mt-16 bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-200">
-            <h2 className="text-2xl font-heading text-burgundy mb-4">Prayer Practice Guidelines</h2>
-            <PatternBorder className="mb-6" />
+            <h2 className="text-2xl font-heading text-burgundy mb-4">
+              {t('prayersSection.prayerPracticeGuidelines', 'Baafata')}
+            </h2>
+            <div className="h-1 bg-burgundy/20 my-6" />
             <div className="space-y-4">
               <p className="text-gray-700">
-                In the Ethiopian Orthodox tradition, prayers are often recited at specific times of day and are accompanied by traditional practices:
+                {t('prayersSection.prayerPracticeGuidelines', 'Seensa')}
               </p>
               <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                <li>Face east when praying, as this is the traditional orientation for prayer.</li>
-                <li>Make the sign of the cross before and after prayers, touching first your forehead, then your chest, right shoulder, and left shoulder.</li>
-                <li>Prostrations (metanoia) are often performed during certain prayers, especially during Lent.</li>
-                <li>Many prayers are traditionally said three times in honor of the Holy Trinity.</li>
-                <li>Prayer beads (mequtaria) may be used to count repetitions of certain prayers.</li>
+                <li>{t('prayersSection.prayerPracticeGuidelines.guidelines', 'Misirroo Q/Gabra-Kiristoos')}</li>
+                <li>{t('prayersSection.prayerPracticeGuidelines.guidelines', 'Hundeefemaa Xofoo')}</li>
+                <li>{t('prayersSection.prayerPracticeGuidelines.guidelines', 'Karoora Waldaa ykn Xofoo M/Q/G/K')}</li>
+                <li>{t('prayersSection.prayerPracticeGuidelines.guidelines', 'Hojiiwwaan Yeroo Darbaan Xoficha Raawwatamman')}</li>
+                <li>{t('prayersSection.prayerPracticeGuidelines.guidelines', 'Ergaa Waligalaa')}</li>
               </ul>
               <p className="text-gray-700 mt-4">
-                Remember that these prayers have been preserved through generations and connect you to the ancient traditions of the Ethiopian Orthodox faith.
+                {t('prayersSection.prayerPracticeGuidelines', 'conclusion')}
               </p>
             </div>
           </div>

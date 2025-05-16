@@ -5,18 +5,35 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Language, useLanguage } from "@/lib/LanguageContext";
+import { Language, useLanguage, languageNames } from "@/lib/LanguageContext";
 
 const LanguageSelector = () => {
   const { language, setLanguage } = useLanguage();
 
+  // Calculate the displayed value based on language
+  const displayValue = language.length === 2 ? 
+    // If it's a language code (en, am, etc.)
+    (language === 'en' ? 'English' : 
+     language === 'am' ? 'Amharic' :
+     language === 'om' ? 'Afaan Oromoo' :
+     language === 'ti' ? 'Tigrinya' : 'English') : 
+    // Otherwise it's already the full name
+    language;
+
   const handleLanguageChange = (value: string) => {
-    setLanguage(value as Language);
+    // Map the display name to the language code if needed
+    const languageCode = 
+      value === 'English' ? 'en' :
+      value === 'Amharic' ? 'am' :
+      value === 'Afaan Oromoo' ? 'om' :
+      value === 'Tigrinya' ? 'ti' : value;
+      
+    setLanguage(languageCode as Language);
   };
 
   return (
     <div className="flex items-center relative z-30">
-      <Select value={language} onValueChange={handleLanguageChange}>
+      <Select value={displayValue} onValueChange={handleLanguageChange}>
         <SelectTrigger className="w-[150px] h-9 border-burgundy text-burgundy focus:ring-burgundy bg-white bg-opacity-95">
           <SelectValue placeholder="Select Language" />
         </SelectTrigger>

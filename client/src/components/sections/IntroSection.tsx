@@ -1,59 +1,77 @@
-import { BookOpen, Calendar, BookOpen as Prayer } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
+import AnimatedImage3D from "@/components/AnimatedImage3D";
+import AnimatedIconFeature from "@/components/AnimatedIconFeature";
+import { useRef } from "react";
 
 const DecorativeDivider = () => (
-  <div className="flex items-center justify-center mb-10">
-    <div className="h-px bg-gold w-24"></div>
-    <div className="mx-4 text-gold">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-xl">
+  <div className="flex items-center justify-center mb-6 sm:mb-10">
+    <div className="h-px bg-gold w-16 sm:w-24"></div>
+    <div className="mx-3 sm:mx-4 text-gold">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-xl sm:w-6 sm:h-6">
         <path d="M12 2l2 4h3l-2.5 3 1 4-3.5-2-3.5 2 1-4L7 6h3z"/>
         <path d="M12 14v8"/>
       </svg>
     </div>
-    <div className="h-px bg-gold w-24"></div>
+    <div className="h-px bg-gold w-16 sm:w-24"></div>
   </div>
 );
 
-const Feature = ({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) => (
-  <div className="flex flex-col items-center text-center">
-    <div className="w-16 h-16 rounded-full bg-burgundy text-white flex items-center justify-center mb-4">
-      {icon}
+const Feature = ({ imageUrl, title, description }: { imageUrl: string; title: string; description: string }) => (
+  <div className="flex flex-col items-center text-center px-4 sm:px-6">
+    <div className="w-20 h-20 sm:w-24 sm:h-24 mb-3 sm:mb-4">
+      <AnimatedIconFeature imageUrl={imageUrl} alt={title} />
     </div>
-    <h3 className="font-heading text-xl text-burgundy mb-2">{title}</h3>
-    <p>{description}</p>
+    <h3 className="font-heading text-lg sm:text-xl text-burgundy mb-2">{title}</h3>
+    <p className="text-sm sm:text-base text-gray-700">{description}</p>
   </div>
 );
+
+const AnimatedImages = () => {
+  return (
+    <AnimatedImage3D 
+      image1Url="/Gabre22 (1) copy.png"
+      image2Url="/Gabre22 (2) copy.png"
+      caption="Misirroo Qulqulluu Gabra Kiristoos"
+      direction="horizontal"
+    />
+  );
+};
 
 const IntroSection = () => {
+  const { t } = useLanguage();
+
   return (
-    <section id="home" className="py-16 container mx-auto px-6">
+    <section id="home" className="py-10 sm:py-16 container mx-auto px-4 sm:px-6">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-heading text-burgundy text-center mb-8">
-          Welcome to Our Spiritual Community
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-heading text-burgundy text-center mb-6 sm:mb-8 leading-tight">
+          {t('introSection', 'title')}
         </h2>
         
         <DecorativeDivider />
         
-        <p className="text-lg text-center mb-10 leading-relaxed">
-          This platform is dedicated to preserving and sharing the rich traditions, teachings, and practices of the Ethiopian Orthodox Tewahedo Church, one of the oldest Christian denominations in the world with a heritage dating back to the 4th century.
+        <p className="text-base sm:text-lg text-center mb-8 sm:mb-10 leading-relaxed text-gray-700 max-w-[90%] sm:max-w-full mx-auto">
+          {t('introSection', 'description')}
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <AnimatedImages />
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 mt-8 sm:mt-12">
           <Feature 
-            icon={<BookOpen className="text-xl" />}
-            title="Sacred Teachings"
-            description="Access ancient spiritual wisdom and theological insights from Ethiopian Orthodox tradition."
+            imageUrl="/Book.jpg"
+            title={t('introSection.features.sacredTeachings', 'title')}
+            description={t('introSection.features.sacredTeachings', 'description')}
           />
           
           <Feature 
-            icon={<Calendar className="text-xl" />}
-            title="Religious Calendar"
-            description="Follow the Ethiopian Orthodox calendar with holy days, festivals, and fasting periods."
+            imageUrl="/BotBanner.jpg"
+            title={t('introSection.features.religiousCalendar', 'title')}
+            description={t('introSection.features.religiousCalendar', 'description')}
           />
           
           <Feature 
-            icon={<Prayer className="text-xl" />}
-            title="Prayers & Hymns"
-            description="Discover traditional prayers, chants, and hymns to enrich your spiritual practice."
+            imageUrl="/Amantaa.png"
+            title={t('introSection.features.prayersHymns', 'title')}
+            description={t('introSection.features.prayersHymns', 'description')}
           />
         </div>
       </div>

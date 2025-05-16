@@ -150,3 +150,68 @@
 .hover\:bg-gold:hover {
   background-color: #C4B454;
 }
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(128, 0, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(128, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(128, 0, 0, 0);
+  }
+}
+
+.bg-burgundy-dark {
+  background-color: #600000;
+}
+
+@layer utilities {
+  .perspective-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+  
+  .masked-image-container {
+    transform: translateZ(0);
+    will-change: transform;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.5s;
+  }
+  
+  .masked-image-container:hover {
+    box-shadow: 0 15px 35px -5px rgba(128, 0, 32, 0.5); /* Burgundy shadow */
+  }
+  
+  .image-hover-effect {
+    transition: transform 0.5s ease-out;
+    filter: brightness(1);
+  }
+  
+  .image-hover-effect:hover {
+    transform: scale(1.05);
+    filter: brightness(1.05);
+  }
+
+  /* Custom reflection effect */
+  .reflection-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.15) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+  }
+  
+  .masked-image-container:hover .reflection-overlay {
+    opacity: 1;
+  }
+}

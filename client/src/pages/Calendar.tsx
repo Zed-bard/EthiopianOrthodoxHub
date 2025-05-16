@@ -14,6 +14,18 @@ import {
 } from "@/lib/calendar-utils";
 import { Helmet } from 'react-helmet';
 import { useLanguage } from "@/lib/LanguageContext";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
+import { getSaintCommemorationsByDay } from "@/lib/saint-commemorations";
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger 
+} from "@/components/ui/popover";
 
 const DecorativeDivider = () => (
   <div className="flex items-center justify-center mb-12">
@@ -37,17 +49,71 @@ const CalendarDay = ({
   currentMonth: boolean; 
   holyDays: HolyDay[];
 }) => {
+  const { language, t } = useLanguage();
+  const lang = language === 'am' ? 'am' : 'om'; // Default to Oromo for other languages
+  
   // Find if this day is a holy day
   const holyDay = holyDays.find(h => h.day === day);
   const isHolyDay = Boolean(holyDay);
-
+  const isToday = day === getCurrentEthiopianDate().day;
+  
+  // Find saint commemorations for this day
+  const saintCommemoration = day ? getSaintCommemorationsByDay(day) : undefined;
+  const hasSaintCommemoration = Boolean(saintCommemoration);
+  
+  if (!day) {
+    return <div className="calendar-day border-b border-r p-2 min-h-[80px]"></div>;
+  }
+  
   return (
-    <div className={`calendar-day border-b border-r p-2 flex flex-col ${isHolyDay ? 'holy-day' : ''}`}>
-      <span className={currentMonth ? '' : 'text-gray-400'}>{day}</span>
-      {isHolyDay && (
-        <span className="text-xs text-burgundy mt-auto">{holyDay?.name}</span>
-      )}
-    </div>
+    <TooltipProvider>
+      <Popover>
+        <PopoverTrigger asChild>
+          <div 
+            className={`
+              calendar-day border-b border-r p-2 flex flex-col min-h-[80px] relative cursor-pointer
+              ${isHolyDay ? 'bg-burgundy bg-opacity-5' : ''}
+              ${currentMonth ? 'hover:bg-gray-50 transition-colors duration-200' : 'bg-gray-50'}
+              ${isToday ? 'ring-2 ring-burgundy ring-opacity-50' : ''}
+              ${hasSaintCommemoration ? 'border-b-gold border-b-2' : ''}
+            `}
+          >
+            <span 
+              className={`
+                text-lg font-medium mb-1
+                ${currentMonth ? 'text-gray-800' : 'text-gray-400'}
+                ${isToday ? 'text-burgundy font-bold' : ''}
+                ${isHolyDay ? 'text-burgundy' : ''}
+              `}
+            >
+              {day}
+            </span>
+            {isHolyDay && (
+              <span className="text-xs text-burgundy mt-auto font-medium bg-burgundy bg-opacity-10 px-2 py-1 rounded-full">
+                {holyDay?.name}
+              </span>
+            )}
+            {hasSaintCommemoration && (
+              <div className="absolute bottom-1 right-1 w-2 h-2 bg-gold rounded-full"></div>
+            )}
+          </div>
+        </PopoverTrigger>
+        {hasSaintCommemoration && saintCommemoration && (
+          <PopoverContent className="w-72 p-3 bg-white shadow-md border-gold border-l-2">
+            <h4 className="font-heading text-burgundy text-lg border-b border-gold pb-1 mb-2">
+              {t('calendarLabels', 'saintCommemorations')}
+            </h4>
+            <ul className="text-sm space-y-1">
+              {saintCommemoration.names[lang].map((name, idx) => (
+                <li key={idx} className="list-disc list-inside font-medium">
+                  {name}
+                </li>
+              ))}
+            </ul>
+          </PopoverContent>
+        )}
+      </Popover>
+    </TooltipProvider>
   );
 };
 
@@ -84,7 +150,7 @@ const Calendar = () => {
   const previousMonth = () => {
     setCurrentDate(prev => {
       if (prev.month === 1) {
-        return { year: prev.year - 1, month: 13 }; // Go to Pagume of previous year
+        return { year: prev.year - 1, month: 13 }; // Go to Qaammee of previous year
       } else {
         return { ...prev, month: prev.month - 1 };
       }
@@ -94,7 +160,7 @@ const Calendar = () => {
   const nextMonth = () => {
     setCurrentDate(prev => {
       if (prev.month === 13) {
-        return { year: prev.year + 1, month: 1 }; // Go to Meskerem of next year
+        return { year: prev.year + 1, month: 1 }; // Go to Fulbaana of next year
       } else {
         return { ...prev, month: prev.month + 1 };
       }
@@ -234,6 +300,22 @@ const Calendar = () => {
                         return <CalendarDay key={`next-${day - daysInMonth}`} day={day - daysInMonth} currentMonth={false} holyDays={[]} />;
                       }
                     })}
+                  </div>
+                </div>
+                
+                {/* Calendar Legend */}
+                <div className="mt-4 p-3 bg-gray-50 rounded-lg text-sm flex flex-wrap items-center gap-4 justify-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 bg-burgundy bg-opacity-10 rounded-full mr-2"></div>
+                    <span className="text-gray-600">{t('calendarLabels', 'holyDays')}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 border-b-2 border-gold mr-2"></div>
+                    <span className="text-gray-600">{t('calendarLabels', 'saintCommemorations')}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 ring-2 ring-burgundy ring-opacity-50 rounded mr-2"></div>
+                    <span className="text-gray-600">{t('calendarLabels', 'today')}</span>
                   </div>
                 </div>
                 
