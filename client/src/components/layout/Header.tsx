@@ -68,31 +68,14 @@ const Header = () => {
               <NotificationIcon />
               <LanguageSelector />
               <div className="relative">
-                <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                  aria-label="Toggle profile menu"
-                >
-                  <FaUserCircle className="w-6 h-6 text-gray-600" />
-                </button>
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
-                    <div className="p-4 space-y-4">
-                      <Profile />
-                      <div className="border-t border-gray-200 pt-4">
-                        <button
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                            // Add your profile settings action here
-                          }}
-                          className="w-full text-left text-sm text-gray-600 hover:text-gray-800"
-                        >
-                          Profile
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <Link href="/profile">
+                  <button
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Go to profile"
+                  >
+                    <FaUserCircle className="w-6 h-6 text-gray-600" />
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

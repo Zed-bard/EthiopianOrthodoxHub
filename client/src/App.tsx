@@ -4,6 +4,7 @@ import Teachings from "@/pages/Teachings";
 import Calendar from "@/pages/Calendar";
 import Prayers from "@/pages/Prayers";
 import Churches from "@/pages/Churches";
+import ProfilePage from "@/pages/ProfilePage";
 import NotFound from "@/pages/not-found";
 import Header from "@/components/layout/Header";
 // Import Inter font with multiple weights
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/calendar" component={Calendar} />
       <Route path="/prayers" component={Prayers} />
       <Route path="/churches" component={Churches} />
+      <Route path="/profile" component={ProfilePage} />
       <Route component={NotFound} />
     </Switch>
   );

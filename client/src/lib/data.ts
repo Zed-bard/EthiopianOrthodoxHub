@@ -145,7 +145,7 @@ export const teachings: Teaching[] = [
       om: "Manni Amantaa Ortodoksii Tawaahidoo Itoophiyaa Waaqayyo tokkicha jiraachuutti cimsee amana. Waaqni kun uumaa waan hundumaa kan mul'atuufi hin mul'anne, kan addunyaa kana deeggaru, madda jireenyaafi gaarummaa hundaa isa guddaadha. Kutaan kun waa'ee amaloota Waaqayyoo, waa'ee amantaa fi bu'uura amantaa mana kiristaanaa keessatti argaman irratti bal'inaan ibsa. (Placeholder - verify from Barumsaa.md)",
       ti: "ቤተ ክርስቲያን ኦርቶዶክስ ተዋሕዶ ኢትዮጵያ ብህላወ ሓደ ኣምላኽ ኣጽኒዓ ትኣምን። እዚ ኣምላኽ እዚ ፈጣሪ ኩሉ ነገር፡ ዝርአን ዘይርአን፡ ደጋፊ ዓለማት፡ ናይ ህይወትን ሰናይ ነገርን ዘበለ ምንጪ እዩ። እዚ ክፍሊ እዚ ብዛዕባ ባህርያት ኣምላኽ፡ ባህሪ እምነትን ካልኦት ምስ መሰረታት እምነት ቤተ ክርስቲያን ዝተኣሳሰሩ ዋና ዋና መትከላት ብዝርዝር ይገልጽ። (Placeholder - verify from Barumsaa.md)"
     },
-    imageUrl: "/images/teachings/faith.jpg"
+    imageUrl: "/Sillaasee.jpg"
   },
   {
     id: 2,
@@ -168,7 +168,7 @@ export const teachings: Teaching[] = [
       om: "Placeholder Afaan Oromoo content for The Mystery of the Trinity. (Content from Barumsaa.md to be added here)",
       ti: "Placeholder Tigrinya content for The Mystery of the Trinity. (Content from Barumsaa.md to be added here)"
     },
-    imageUrl: "/images/teachings/trinity.jpg"
+    imageUrl: "/dingl.jpg"
   },
   {
     id: 3,
@@ -471,9 +471,9 @@ export const prayers: Prayer[] = [
     slug: "morning-prayer",
     description: {
       en: "The first prayer of the day at 6 AM, commemorating Adam's creation and Christ's future coming for judgment.",
-      am: "የቀኑ የመጀመሪያ ጸሎት በጠዋት 6 ሰዓት፣ የአዳምን ፍጥረትና ክርስቶስ ለፍርድ የሚመጣበትን የሚያስታውስ።",
-      om: "Kadhannaa jalqabaa guyyaa sa'a 6 ganama, uumama Addaamii fi dhufaatii Kiristoos firdiitiif yaadachiisu.",
-      ti: "ናይ መዓልቲ ቀዳማይ ጸሎት ሰዓት 6 ንጉሆ፡ ምፍጣር ኣዳምን መጽኢ ፍርዲ ክርስቶስን ዘዘኻኽር።"
+      am: "የቀኑ የመጀመሪያ ጸሎት በጠዋት 12:00 ሰዓት፣ የአዳምን ፍጥረትና ክርስቶስ ለፍርድ የሚመጣበትን የሚያስታውስ።",
+      om: "Kadhannaa jalqabaa guyyaa sa'a 12:00 ganama, uumama Addaamii fi dhufaatii Kiristoos firdiitiif yaadachiisu.",
+      ti: "ናይ መዓልቲ ቀዳማይ ጸሎት ሰዓት 12:00 ንጉሆ፡ ምፍጣር ኣዳምን መጽኢ ፍርዲ ክርስቶስን ዘዘኻኽር።"
     },
     content: {
       time: "6:00 AM",
@@ -509,8 +509,7 @@ export const prayers: Prayer[] = [
       am: "የዕለት ጸሎት",
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
-    },
-    imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    },    imageUrl: "/Adam.jpg"
   },
   {
     id: 2,
@@ -559,7 +558,7 @@ export const prayers: Prayer[] = [
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
     },
-    imageUrl: "https://images.unsplash.com/photo-1544198365-f5d60b6d8190?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    imageUrl: "/image.png"
   },
   {
     id: 3,
@@ -573,9 +572,9 @@ export const prayers: Prayer[] = [
     slug: "sixth-hour-prayer",
     description: {
       en: "Midday prayer at 12 PM, commemorating Christ's crucifixion on the Cross.",
-      am: "በቀትር 12 ሰዓት፣ ክርስቶስ በመስቀል የተሰቀለበትን የሚያስታውስ ጸሎት።",
-      om: "Kadhannaa guyyaa walakkaa sa'a 12, fannifamuu Kiristoos yaadachiisu.",
-      ti: "ጸሎት ሰዓት 12 ቀትሪ፡ ምስቃል ክርስቶስ ኣብ መስቀል ዘዘኻኽር።"
+      am: "በቀትር 6 ሰዓት፣ ክርስቶስ በመስቀል የተሰቀለበትን የሚያስታውስ ጸሎት።",
+      om: "Kadhannaa guyyaa walakkaa sa'a 6, fannifamuu  Gooftaa Keenya Iyyesuus Kiristoos yaadachiisu.",
+      ti: "ጸሎት ሰዓት 6 ቀትሪ፡ ምስቃል ክርስቶስ ኣብ መስቀል ዘዘኻኽር።"
     },
     content: {
       time: "6:00 ",
@@ -608,7 +607,7 @@ export const prayers: Prayer[] = [
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
     },
-    imageUrl: "https://images.unsplash.com/photo-1504256624605-ff6e9d50bdc4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    imageUrl: "/cross.jpg"
   },
   {
     id: 4,
@@ -657,7 +656,7 @@ export const prayers: Prayer[] = [
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
     },
-    imageUrl: "https://images.unsplash.com/photo-1501139083538-0139583c060f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    imageUrl: "/crusifixion.jpg"
   },
   {
     id: 5,
@@ -706,7 +705,7 @@ export const prayers: Prayer[] = [
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
     },
-    imageUrl: "https://images.unsplash.com/photo-1472068113808-609faf3a6cf1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    imageUrl: "/Joseph.jpg"
   },
   {
     id: 6,
@@ -755,7 +754,7 @@ export const prayers: Prayer[] = [
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
     },
-    imageUrl: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    imageUrl: "/Home.jpg"
   },
   {
     id: 7,
@@ -804,6 +803,6 @@ export const prayers: Prayer[] = [
       om: "Kadhannaa Guyyaa",
       ti: "ዕለታዊ ጸሎት"
     },
-    imageUrl: "https://images.unsplash.com/photo-1532767153582-b1a0e5145009?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
+    imageUrl: "/ress.jpg"
   }
 ];

@@ -320,6 +320,43 @@ export const translations: Translations = {
       'Afaan Oromoo': 'Sanbata',
       'Tigrinya': 'ቀዳም'
     }
+  },  profile: {
+    title: {
+      'en': 'User Profile',
+      'am': 'የተጠቃሚ መገለጫ',
+      'om': 'Profaayilii Fayyadamaa',
+      'ti': 'ናይ ተጠቃሚ መንነት'
+    },
+    signIn: {
+      'en': 'Sign In',
+      'am': 'ይግቡ',
+      'om': 'Seeni',
+      'ti': 'እተው'
+    },
+    signOut: {
+      'en': 'Sign Out',
+      'am': 'ይውጡ',
+      'om': 'Ba\'i',
+      'ti': 'ውጻእ'
+    },
+    accountInfo: {
+      'en': 'Account Information',
+      'am': 'የመለያ መረጃ',
+      'om': 'Odeeffannoo Herrega',
+      'ti': 'ናይ ኣካውንት ሓበሬታ'
+    },
+    signInProvider: {
+      'en': 'Sign-in provider',
+      'am': 'የመግቢያ አቅራቢ',
+      'om': 'Dhiyeessaa seensaa',
+      'ti': 'ናይ መእተዊ ኣቕራቢ'
+    },
+    accessAccount: {
+      'en': 'Access your Ethiopian Orthodox Hub account',
+      'am': 'የኢትዮጵያ ኦርቶዶክስ ማዕከል መለያዎን ይጠቀሙ',
+      'om': 'Herrega Ortodoksii Itoophiyaa keessan seenaa',
+      'ti': 'ናብ ናይ ኢትዮጵያ ኦርቶዶክስ ማእከል ኣካውንትኩም እተው'
+    }
   },
   common: {
     subscribe: {

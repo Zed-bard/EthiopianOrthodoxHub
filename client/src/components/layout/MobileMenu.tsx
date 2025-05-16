@@ -231,15 +231,16 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                     <RiSettings4Line className="w-5 h-5" />
                   </motion.button>
                 </div>
-              ) : (
-                <motion.button 
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={onClose}
-                  className="w-full px-4 py-3.5 bg-gradient-to-r from-burgundy to-burgundy/90 text-white rounded-xl font-medium shadow-lg shadow-burgundy/20 hover:shadow-xl hover:shadow-burgundy/30 transition-all"
-                >
-                  Sign In
-                </motion.button>
+              ) : (                <Link href="/profile">
+                  <motion.button 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={onClose}
+                    className="w-full px-4 py-3.5 bg-gradient-to-r from-burgundy to-burgundy/90 text-white rounded-xl font-medium shadow-lg shadow-burgundy/20 hover:shadow-xl hover:shadow-burgundy/30 transition-all"
+                  >
+                    {t('profile', 'signIn') || 'Sign In'}
+                  </motion.button>
+                </Link>
               )}
             </motion.div>
           </motion.div>
